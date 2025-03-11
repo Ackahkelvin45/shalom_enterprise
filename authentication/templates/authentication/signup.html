@@ -1,0 +1,437 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+		<title>Shalom Enterprise | Sign Up</title>
+
+		<!-- Google font -->
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+		<!-- Bootstrap -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css'  %}"/>
+
+		<!-- Slick -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/slick.css'  %}"/>
+		<link type="text/css" rel="stylesheet" href="{% static 'css/slick-theme.css'  %}"/>
+
+		<!-- nouislider -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/nouislider.min.css '  %}"/>
+
+		<!-- Font Awesome Icon -->
+		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css'  %}">
+
+		<!-- Custom stlylesheet -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}"/>
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+        <style>
+            .input-group {
+                position: relative;
+                width: 100%;
+            }
+            .input-icon {
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                color: #999;
+                z-index: 10;
+            }
+            .password-toggle {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                color: #999;
+                cursor: pointer;
+                z-index: 10;
+            }
+            .has-icon {
+                padding-left: 40px;
+            }
+        </style>
+    </head>
+	<body>
+		<!-- HEADER -->
+		<header>
+			<!-- TOP HEADER -->
+			<div id="top-header">
+				<div class="container">
+					<ul class="header-links pull-left">
+						<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+						<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
+						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
+					</ul>
+					<ul class="header-links pull-right">
+						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+						<li><a><i class="fa fa-user-plus"></i> Register</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- /TOP HEADER -->
+
+			<!-- MAIN HEADER -->
+			<div id="header">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<!-- LOGO -->
+						<div class="col-md-3">
+							<div class="header-logo">
+								<a href="{% url 'main:index'%}" class="logo">
+									<h2 style="color: white;">
+										<span style="color: #D10024;">
+											Shalom
+										</span>
+										
+										 Afric Enterprise</h2>
+								</a>
+							</div>
+						</div>
+						<!-- /LOGO -->
+					</div>
+					<!-- row -->
+				</div>
+				<!-- container -->
+			</div>
+			<!-- /MAIN HEADER -->
+		</header>
+		<!-- /HEADER -->
+		
+		<!-- SECTION -->
+		<div class="section" style="margin-top:20px;margin-bottom: 20px;">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row ">
+					<div class="col-md-6 col-md-offset-3 ">
+						<div class="billing-details">
+							<div class="section-title text-center">
+								<h3 class="title">Sign Up</h3>
+							</div>
+							
+							{% if messages %}
+							
+								{% for message in messages %}
+									
+                                    <div class="alert alert-red custom-alert" role="alert">
+                                        <svg style="height:30px;width:30px" class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                        </svg>
+                                        <span class="sr-only">Info</span>
+                                        <div  style="margin-left:5px" class="ms-3 font-medium">
+                                            {{ message }}
+                                        </div>
+                                        <button type="button" class="close-btn" aria-label="Close">
+                                            <span class="sr-only">Close</span>
+                                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+								{% endfor %}
+						
+							{% endif %}
+							
+							<form method="post" id="signupForm" action="{% url 'auth:signup' %}">
+								{% csrf_token %}
+								
+								<div class="form-group">
+									<div class="input-group">
+										<i class="fa fa-user input-icon"></i>
+										<input class="input has-icon" type="text" name="first_name" placeholder="First Name" required>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="input-group">
+										<i class="fa fa-user input-icon"></i>
+										<input class="input has-icon" type="text" name="last_name" placeholder="Last Name" required>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<i class="fa fa-envelope input-icon"></i>
+										<input class="input has-icon" type="email" name="email" placeholder="Email" required>
+									</div>
+								</div>
+								
+						
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fa fa-lock input-icon"></i>
+                            <input class="input has-icon" type="password" name="password" id="password" placeholder="Password" required>
+                            <i class="fa fa-eye password-toggle" id="togglePassword"></i>
+                        </div>
+                        <small id="passwordHelp" class="form-text text-muted">
+                            Password must be at least 6 characters long and contain at least one capital letter and one number.
+                            <span id="passwordCheck" style="color: red;">✘</span>
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fa fa-lock input-icon"></i>
+                            <input class="input has-icon" type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+                            <i class="fa fa-eye password-toggle" id="toggleConfirmPassword"></i>
+                        </div>
+                    </div>
+                                                    <div class="form-group">
+									<div class="input-group">
+										<i class="fa fa-phone input-icon"></i>
+										<input class="input has-icon" type="tel" name="phone_number" placeholder="Phone Number" required>
+									</div>
+								</div>
+								
+								<div class="form-group text-center">
+									<button type="submit" class="primary-btn">Sign Up</button>
+								</div>
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                    <hr style="flex-grow: 1; border: none; border-top: 1px solid #ccc; height: 1px;">
+                                    <p style="margin: 0;">Already have an account? <a href="{% url 'auth:signin' %}">Sign In here</a></p>
+                                    <hr style="flex-grow: 1; border: none; border-top: 1px solid #ccc; height: 1px;">
+                                </div>
+                                
+                                
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- FOOTER -->
+		<footer id="footer">
+			<!-- top footer -->
+			<div class="section">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">About Us</h3>
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
+								<ul class="footer-links">
+									<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
+									<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
+									<li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Categories</h3>
+								<ul class="footer-links">
+									<li><a href="#">Hot deals</a></li>
+									<li><a href="#">Laptops</a></li>
+									<li><a href="#">Smartphones</a></li>
+									<li><a href="#">Cameras</a></li>
+									<li><a href="#">Accessories</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="clearfix visible-xs"></div>
+
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Information</h3>
+								<ul class="footer-links">
+									<li><a href="#">About Us</a></li>
+									<li><a href="#">Contact Us</a></li>
+									<li><a href="#">Privacy Policy</a></li>
+									<li><a href="#">Orders and Returns</a></li>
+									<li><a href="#">Terms & Conditions</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Service</h3>
+								<ul class="footer-links">
+									<li><a href="#">My Account</a></li>
+									<li><a href="#">View Cart</a></li>
+									<li><a href="#">Wishlist</a></li>
+									<li><a href="#">Track My Order</a></li>
+									<li><a href="#">Help</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /container -->
+			</div>
+			<!-- /top footer -->
+
+			<!-- bottom footer -->
+			<div id="bottom-footer" class="section">
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<ul class="footer-payments">
+								<li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
+								<li><a href="#"><i class="fa fa-credit-card"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
+							</ul>
+							<span class="copyright">
+								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+							</span>
+						</div>
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /container -->
+			</div>
+			<!-- /bottom footer -->
+		</footer>
+		<!-- /FOOTER -->
+
+		<!-- jQuery Plugins -->
+		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		
+		<script src="{% static 'js/main.js' %}"></script>
+
+      
+        <script>
+
+$(document).ready(function() {
+
+    document.querySelectorAll('.messages .close-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const alert = this.closest('.alert');
+            if (alert) {
+                alert.remove();
+            }
+        });
+    });
+
+    // Password visibility toggle
+    $('#togglePassword').click(function() {
+        const passwordField = $('#password');
+        const passwordFieldType = passwordField.attr('type');
+        
+        // Toggle password visibility
+        if (passwordFieldType === 'password') {
+            passwordField.attr('type', 'text');
+            $(this).removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    // Confirm Password visibility toggle
+    $('#toggleConfirmPassword').click(function() {
+        const confirmPasswordField = $('#confirm_password');
+        const confirmPasswordFieldType = confirmPasswordField.attr('type');
+        
+        // Toggle password visibility
+        if (confirmPasswordFieldType === 'password') {
+            confirmPasswordField.attr('type', 'text');
+            $(this).removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            confirmPasswordField.attr('type', 'password');
+            $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    // Password validation
+    $('#password').on('input', function() {
+        const password = $(this).val();
+        const hasCapital = /[A-Z]/.test(password); // Check for at least one capital letter
+        const hasNumber = /[0-9]/.test(password); // Check for at least one number
+        const isLongEnough = password.length >= 6; // Check for at least 6 characters
+        const isValid = hasCapital && hasNumber && isLongEnough;
+
+        if (isValid) {
+            $('#passwordCheck').html('✔').css('color', 'green');
+        } else {
+            $('#passwordCheck').html('✘').css('color', 'red');
+        }
+    });
+
+    // Form submission validation
+    $('#signupForm').on('submit', function(event) {
+        // Validate password
+        const password = $('#password').val();
+        const confirmPassword = $('#confirm_password').val();
+        const hasCapital = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const isLongEnough = password.length >= 6;
+
+        // Clear existing alerts
+        $('.custom-alert').remove();
+
+        if (!hasCapital || !hasNumber || !isLongEnough) {
+            event.preventDefault(); // Prevent form submission
+            showAlert('Password must be at least 6 characters long and contain at least one capital letter and one number.', 'red');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            event.preventDefault(); // Prevent form submission
+            showAlert('Passwords do not match.', 'red');
+            return;
+        }
+
+        // If all validations pass, allow the form to submit
+    });
+
+    // Function to show custom alert
+    function showAlert(message, type) {
+        const alertClass = type === 'red' ? 'alert-red' : 'alert-blue'; // Add more types if needed
+        const alertHtml = `
+            <div class="alert ${alertClass} custom-alert" role="alert">
+                <svg style="height:30px;width:30px" class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div  style="margin-left:5px" class="ms-3 font-medium">
+                    ${message}
+                </div>
+                <button type="button" class="close-btn" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>
+            </div>
+        `;
+
+        // Append the alert to the form
+        $('#signupForm').prepend(alertHtml);
+
+        // Add click event to close button
+        $('.close-btn').on('click', function() {
+            $(this).closest('.custom-alert').remove();
+        });
+    }
+});
+ </script>
+	</body>
+</html>
