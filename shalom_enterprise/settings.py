@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-06sxf-rs^o_kplj1k-m@2ji%9f#8d45*usxhxdnl3s4%1di@2q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -166,6 +166,12 @@ REST_FRAMEWORK = {
 
 
 
-CORS_ALLOWED_ORIGINS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost",  # Your frontend URL
+    "http://127.0.0.10",
+    "http://0.0.0.0",
+    "https://shalom-enterprise-1.onrender.com"
+    'shalom-enterprise-1.onrender.com'
+    ]
 
 CORS_ALLOW_CREDENTIALS = True  # To allow cookies
