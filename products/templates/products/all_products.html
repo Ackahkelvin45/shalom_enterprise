@@ -1,5 +1,7 @@
 {% extends 'shalom_enterprise/layout.html' %}
 {%load static %}
+{% load custom_filters %}
+
 {% block title %}Home -Shalom Enterprise{% endblock %}
 
 {% block content %}
@@ -13,9 +15,8 @@
 					<div class="col-md-12">
 						<ul class="breadcrumb-tree">
 							<li><a href="#">Home</a></li>
-							<li><a href="#">All Categories</a></li>
-							<li><a href="#">Accessories</a></li>
-							<li class="active">Headphones (227,490 Results)</li>
+							<li><a href="#">All Products</a></li>
+							
 						</ul>
 					</div>
 				</div>
@@ -33,142 +34,99 @@
 				<div class="row">
 					<!-- ASIDE -->
 					<div id="aside" class="col-md-3">
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Categories</h3>
-							<div class="checkbox-filter">
-
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-1">
-									<label for="category-1">
-										<span></span>
-										Laptops
-										<small>(120)</small>
-									</label>
-								</div>
-
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-2">
-									<label for="category-2">
-										<span></span>
-										Smartphones
-										<small>(740)</small>
-									</label>
-								</div>
-
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-3">
-									<label for="category-3">
-										<span></span>
-										Cameras
-										<small>(1450)</small>
-									</label>
-								</div>
-
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-4">
-									<label for="category-4">
-										<span></span>
-										Accessories
-										<small>(578)</small>
-									</label>
-								</div>
-
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-5">
-									<label for="category-5">
-										<span></span>
-										Laptops
-										<small>(120)</small>
-									</label>
-								</div>
-
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-6">
-									<label for="category-6">
-										<span></span>
-										Smartphones
-										<small>(740)</small>
-									</label>
+						
+						<form id="filter-form" method="get" action="{% url 'products:all-products' %}">
+							<!-- Search Products -->
+							<div class="aside">
+								<h3 class="aside-title">Search Products</h3>
+								<div class="input-group">
+									<input type="text" class="form-control" name="search" 
+										   placeholder="Product name..." value="{{ search_query|default:'' }}">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="submit">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
 								</div>
 							</div>
-						</div>
-						<!-- /aside Widget -->
-
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Price</h3>
-							<div class="price-filter">
-								<div id="price-slider"></div>
-								<div class="input-number price-min">
-									<input id="price-min" type="number">
-									<span class="qty-up">+</span>
-									<span class="qty-down">-</span>
-								</div>
-								<span>-</span>
-								<div class="input-number price-max">
-									<input id="price-max" type="number">
-									<span class="qty-up">+</span>
-									<span class="qty-down">-</span>
-								</div>
-							</div>
-						</div>
-						<!-- /aside Widget -->
-
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Brand</h3>
-							<div class="checkbox-filter">
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-1">
-									<label for="brand-1">
-										<span></span>
-										SAMSUNG
-										<small>(578)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-2">
-									<label for="brand-2">
-										<span></span>
-										LG
-										<small>(125)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-3">
-									<label for="brand-3">
-										<span></span>
-										SONY
-										<small>(755)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-4">
-									<label for="brand-4">
-										<span></span>
-										SAMSUNG
-										<small>(578)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-5">
-									<label for="brand-5">
-										<span></span>
-										LG
-										<small>(125)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-6">
-									<label for="brand-6">
-										<span></span>
-										SONY
-										<small>(755)</small>
-									</label>
+						
+							<!-- Categories -->
+							<div class="aside">
+								<h3 class="aside-title">Categories</h3>
+								<div class="checkbox-filter">
+									{% for category in categories %}
+									<div class="input-checkbox">
+										<input type="checkbox" id="category-{{ category.id }}" name="category" 
+											   value="{{ category.id }}" 
+											   {% if category.id in selected_categories %}checked{% endif %}>
+										<label for="category-{{ category.id }}">
+											<span></span>
+											{{ category.name }}
+											<small>({{ category.products.count }})</small>
+										</label>
+									</div>
+									{% endfor %}
 								</div>
 							</div>
-						</div>
+						
+							<!-- Price Range -->
+							<div class="aside">
+								<h3 class="aside-title">Price</h3>
+								<div class="price-filter">
+									<div id="price-slider"></div>
+									<div class="input-number price-min">
+										<input id="price-min" type="number" name="price_min" 
+											   value="{{ price_min|default:'' }}" placeholder="Min">
+										<span class="qty-up">+</span>
+										<span class="qty-down">-</span>
+									</div>
+									<span>-</span>
+									<div class="input-number price-max">
+										<input id="price-max" type="number" name="price_max" 
+											   value="{{ price_max|default:'' }}" placeholder="Max">
+										<span class="qty-up">+</span>
+										<span class="qty-down">-</span>
+									</div>
+								</div>
+							</div>
+						
+							<!-- Brands -->
+							<div class="aside">
+								<h3 class="aside-title">Brand</h3>
+								<div class="checkbox-filter">
+									{% for brand in brands %}
+									<div class="input-checkbox">
+										<input type="checkbox" id="brand-{{ brand.id }}" name="brand" 
+											   value="{{ brand.id }}"
+											   {% if brand.id in selected_brands %}checked{% endif %}>
+										<label for="brand-{{ brand.id }}">
+											<span></span>
+											{{ brand.name }}
+											{% if brand.product_count > 0 %}
+											<small>({{ brand.product_count}})</small>
+											{% else %}
+											<small>(0)</small>
+											{% endif %}
+										</label>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+						
+							<!-- Filter Buttons -->
+							<div class="aside">
+								<button type="submit" class="btn primary-btn" style="width: 100%;">
+									<i class="fa fa-filter"></i>
+									Filter
+								</button>
+								{% if selected_categories or selected_brands or price_min or price_max or search_query %}
+								<a href="{% url 'products:all-products' %}" class="btn btn-default" style="width: 100%; margin-top: 10px;">
+									Clear Filters
+								</a>
+								{% endif %}
+							</div>
+						</form>
+						
 						<!-- /aside Widget -->
 
 						<!-- aside Widget -->
@@ -180,8 +138,8 @@
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
+									<h3 class="product-name"><a href="#">product name</a></h3>
+									<h4 class="product-price">GHS 980.00 <del class="product-old-price">GHS 990.00</del></h4>
 								</div>
 							</div>
 
@@ -191,8 +149,8 @@
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
+									<h3 class="product-name"><a href="#">product name</a></h3>
+									<h4 class="product-price">GHS 980.00 <del class="product-old-price">GHS 990.00</del></h4>
 								</div>
 							</div>
 
@@ -202,8 +160,8 @@
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
+									<h3 class="product-name"><a href="#">product name</a></h3>
+									<h4 class="product-price">GHS 980.00 <del class="product-old-price">GHS 990.00</del></h4>
 								</div>
 							</div>
 						</div>
@@ -217,18 +175,10 @@
 						<div class="store-filter clearfix">
 							<div class="store-sort">
 								<label>
-									Sort By:
-									<select class="input-select">
-										<option value="0">Popular</option>
-										<option value="1">Position</option>
-									</select>
-								</label>
-
-								<label>
 									Show:
-									<select class="input-select">
-										<option value="0">20</option>
-										<option value="1">50</option>
+									<select class="input-select" onchange="window.location.href=this.value">
+										<option value="?page_size=20{% for key,value in request.GET.items %}{% if key != 'page_size' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.page_size == '20' or not request.GET.page_size %}selected{% endif %}>20</option>
+										<option value="?page_size=50{% for key,value in request.GET.items %}{% if key != 'page_size' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.page_size == '50' %}selected{% endif %}>50</option>
 									</select>
 								</label>
 							</div>
@@ -242,280 +192,98 @@
 						<!-- store products -->
 						<div class="row">
 							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product01.png' %} " alt="">
-										<div class="product-label">
-											<span class="sale">-30%</span>
-											<span class="new">NEW</span>
-										</div>
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button   class="quick-view"><a href="{% url 'products:product-detail'%}"><i class="fa fa-eye"></i></a></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
+						
+							{% for product in products %}
+<div class="col-md-4 col-xs-6">
+    <div class="product">
+        <div class="product-img" style="height: 300px!important;">
+            {% with product.images.first as main_image %}
+                {% if main_image %}
+                    <img src="{{ main_image.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <img src="" alt="No image available">
+                {% endif %}
+            {% endwith %}
+            
+            <div class="product-label">
+                {% if product.discount_price %}
+                    {% widthratio product.discount_price product.price 100 as discount_percentage %}
+                    <span class="sale">-{{ 100|subtract:discount_percentage }}%</span>
+                {% endif %}
+                <span class="new">NEW</span>
+            </div>
+        </div>
+        <div class="product-body">
+            <p class="product-category">{{ product.category.name }}</p>
+            <h3 class="product-name"><a href="#">{{ product.name }}</a></h3>
+            <h4 class="product-price">
+                GHS {{ product.discount_price|default:product.price }}
+                {% if product.discount_price %}
+                    <del class="product-old-price">GHS{{ product.price }}</del>
+                {% endif %}
+            </h4>
+            <div class="product-rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+            </div>
+            <div class="product-btns">
+                <button class="add-to-wishlist" onclick="addToWishlist({{ product.id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                <button class="quick-view">
+					<a href="{% url 'products:product-detail' product.slug %}">
+
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <span class="tooltipp">quick view</span>
+                </button>
+            </div>
+        </div>
+        <div class="add-to-cart">
+            <button class="add-to-cart-btn"  onclick="addToCart({{ product.id}}, 1)"><i class="fa fa-shopping-cart"></i> add to cart</button>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+<div class="clearfix visible-lg visible-md"></div>
+		
+							
 							<!-- /product -->
 
 							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product02.png' %} " alt="">
-										<div class="product-label">
-											<span class="new">NEW</span>
-										</div>
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star-o"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
+							
+					
 							<!-- /product -->
 
-							<div class="clearfix visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product03.png ' %} " alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-lg visible-md"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product04.png' %}" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product05.png' %}" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product06.png' %}" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star-o"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-lg visible-md visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product07.png' %}" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product08.png' %}" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{% static '/img/product09.png' %}" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-										<div class="product-rating">
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
 							<!-- /product -->
 						</div>
 						<!-- /store products -->
 
 						<!-- store bottom filter -->
-						<div class="store-filter clearfix">
-							<span class="store-qty">Showing 20-100 products</span>
-							<ul class="store-pagination">
-								<li class="active">1</li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-							</ul>
-						</div>
+					<!-- store bottom filter -->
+<div class="store-filter clearfix">
+    <span class="store-qty">Showing {{ products.start_index }}-{{ products.end_index }} of {{ products.paginator.count }} products</span>
+    <ul class="store-pagination">
+        {% if products.has_previous %}
+            <li><a href="?page={{ products.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"><i class="fa fa-angle-left"></i></a></li>
+        {% endif %}
+        
+        {% for num in products.paginator.page_range %}
+            {% if products.number == num %}
+                <li class="active">{{ num }}</li>
+            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                <li><a href="?page={{ num }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if products.has_next %}
+            <li><a href="?page={{ products.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"><i class="fa fa-angle-right"></i></a></li>
+        {% endif %}
+    </ul>
+</div>
+<!-- /store bottom filter -->
 						<!-- /store bottom filter -->
 					</div>
 					<!-- /STORE -->
@@ -561,6 +329,34 @@
 			<!-- /container -->
 		</div>
 		<!-- /NEWSLETTER -->
+
+		{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filter-form');
+    
+    // Auto-submit when checkboxes change
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            filterForm.submit();
+        });
+    });
+    
+    // Submit on Enter key in search field
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                filterForm.submit();
+            }
+        });
+    }
+    
+ 
+});
+</script>
+{% endblock %}
 
 
 		{% endblock%}

@@ -6,505 +6,306 @@
 		
 		{% block content %}
 		
-		<!-- BREADCRUMB -->
-		<div id="breadcrumb" class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<div class="col-md-12">
-						<ul class="breadcrumb-tree">
-							<li><a href="#">Home</a></li>
-							<li><a href="#">All Categories</a></li>
-							<li><a href="#">Accessories</a></li>
-							<li><a href="#">Headphones</a></li>
-							<li class="active">Product name goes here</li>
-						</ul>
-					</div>
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
-		<!-- /BREADCRUMB -->
+		
 
-		<!-- SECTION -->
-		<div class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<!-- Product main img -->
-					<div class="col-md-5 col-md-push-2">
-						<div id="product-main-img">
-							<div class="product-preview">
-								<img src="{% static '/img/product01.png' %}" alt="">
-							</div>
+	
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="{% url 'main:index' %}">Home</a></li>
+                    <li><a href="{% url 'products:all-products' %}">All Products</a></li>
+                    <li><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></li>
+                    <li class="active">{{ product.name }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
 
-							<div class="product-preview">
-								<img src="{% static '/img/product03.png' %}" alt="">
-							</div>
+<!-- SECTION -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Product main img -->
+            <div class="col-md-5 col-md-push-2">
+                <div id="product-main-img">
+                    {% if main_image %}
+                        <div class="product-preview">
+                            <img src="{{ main_image.image.url }}" alt="{{ product.name }}">
+                        </div>
+                    {% endif %}
+                    {% for image in product.images.all %}
+                        {% if image != main_image %}
+                        <div class="product-preview">
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /Product main img -->
 
-							<div class="product-preview">
-								<img src="{% static '/img/product06.png' %}" alt="">
-							</div>
+            <!-- Product thumb imgs -->
+            <div class="col-md-2 col-md-pull-5">
+                <div id="product-imgs">
+                    {% if main_image %}
+                        <div class="product-preview">
+                            <img src="{{ main_image.image.url }}" alt="{{ product.name }}">
+                        </div>
+                    {% endif %}
+                    {% for image in product.images.all %}
+                        {% if image != main_image %}
+                        <div class="product-preview">
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /Product thumb imgs -->
 
-							<div class="product-preview">
-								<img src="{% static '/img/product08.png' %}" alt="">
-							</div>
-						</div>
-					</div>
-					<!-- /Product main img -->
+            <!-- Product details -->
+            <div class="col-md-5">
+                <div class="product-details">
+                    <h2 class="product-name">{{ product.name }}</h2>
+                    <div>
+                        <div class="product-rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <a class="review-link" href="#">10 Review(s) | Add your review</a>
+                    </div>
+                    <div>
+                        <h3 class="product-price">
+                            GHS{{ product.discount_price|default:product.price }}
+                            {% if product.discount_price %}
+                                <del class="product-old-price">GHS{{ product.price }}</del>
+                            {% endif %}
+                        </h3>
+                        <span class="product-available">In Stock</span>
+                    </div>
+                    <p>{{ product.description }}</p>
 
-					<!-- Product thumb imgs -->
-					<div class="col-md-2  col-md-pull-5">
-						<div id="product-imgs">
-							<div class="product-preview">
-								<img src="{% static '/img/product01.png' %}" alt="">
-							</div>
+                    <div class="product-options">
+                        <!-- Add your size/color options here if needed -->
+                    </div>
 
-							<div class="product-preview">
-								<img src="{% static '/img/product03.png' %}" alt="">
-							</div>
+                    <div class="add-to-cart">
+                       
+                        <div class="qty-label">
+                            Qty
+                            <div class="input-number">
+                                <input type="number" value="1" step="1" min="1">
+                                <span class="qty-up">+</span>
+                                <span class="qty-down">-</span>
+                            </div>
+                        </div>
+                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                    </div>
 
-							<div class="product-preview">
-								<img src="{% static '/img/product06.png' %}" alt="">
-							</div>
+                  
+                    <ul class="product-btns">
+                        <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
+                    </ul>
 
-							<div class="product-preview">
-								<img src="{% static '/img/product08.png' %} " alt="">
-							</div>
-						</div>
-					</div>
-					<!-- /Product thumb imgs -->
+                    <ul class="product-links">
+                        <li>Category:</li>
+                        <li><a >{{ product.category.name }}</a></li>
+                    </ul>
+                    <ul class="product-links">
+                        <li>Brand:</li>
+                        <li><a >{{ product.brand.name }}</a></li>
+                    </ul>
 
-					<!-- Product details -->
-					<div class="col-md-5">
-						<div class="product-details">
-							<h2 class="product-name">product name goes here</h2>
-							<div>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-								<a class="review-link" href="#">10 Review(s) | Add your review</a>
-							</div>
-							<div>
-								<h3 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h3>
-								<span class="product-available">In Stock</span>
-							</div>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <ul class="product-links">
+                        <li>Share:</li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /Product details -->
 
-							<div class="product-options">
-								<label>
-									Size
-									<select class="input-select">
-										<option value="0">X</option>
-									</select>
-								</label>
-								<label>
-									Color
-									<select class="input-select">
-										<option value="0">Red</option>
-									</select>
-								</label>
-							</div>
+            <!-- Product tab -->
+            <div class="col-md-12">
+                <div id="product-tab">
+                    <!-- product tab nav -->
+                    <ul class="tab-nav">
+                        <li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
+                        <li><a data-toggle="tab" href="#tab2">Details</a></li>
+                        <li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+                    </ul>
+                    <!-- /product tab nav -->
 
-							<div class="add-to-cart">
-								<div class="qty-label">
-									Qty
-									<div class="input-number">
-										<input type="number">
-										<span class="qty-up">+</span>
-										<span class="qty-down">-</span>
-									</div>
-								</div>
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-							</div>
+                    <!-- product tab content -->
+                    <div class="tab-content">
+                        <!-- tab1  -->
+                        <div id="tab1" class="tab-pane fade in active">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>{{ product.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /tab1  -->
 
-							<ul class="product-btns">
-								<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
-								<li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>
-							</ul>
+                        <!-- tab2  -->
+                        <div id="tab2" class="tab-pane fade in">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Additional product details would go here.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /tab2  -->
 
-							<ul class="product-links">
-								<li>Category:</li>
-								<li><a href="#">Headphones</a></li>
-								<li><a href="#">Accessories</a></li>
-							</ul>
+                        <!-- tab3  -->
+                        <!-- Replace your tab3 content with this: -->
+<div id="tab3" class="tab-pane fade in">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="reviews">
+                
+                <!-- Review Form -->
+                <div class="review-form" id="review-form-container">
+                    <h5>Write a Review</h5>
+                    {% if user.is_authenticated %}
+                    <form id="review-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="rating-stars">
+                                <input id="star-5" type="radio" name="rating" value="5">
+                                <label for="star-5"><i class="fa fa-star"></i></label>
+                                
+                                <input id="star-4" type="radio" name="rating" value="4">
+                                <label for="star-4"><i class="fa fa-star"></i></label>
+                                
+                                <input id="star-3" type="radio" name="rating" value="3">
+                                <label for="star-3"><i class="fa fa-star"></i></label>
+                                
+                                <input id="star-2" type="radio" name="rating" value="2">
+                                <label for="star-2"><i class="fa fa-star"></i></label>
+                                
+                                <input id="star-1" type="radio" name="rating" value="1">
+                                <label for="star-1"><i class="fa fa-star"></i></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="review-title" class="form-control" placeholder="Title" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="review-comment" class="form-control" rows="5" placeholder="Your Review" required></textarea>
+                        </div>
+                        <button type="submit" class="primary-btn btn-sm">Submit Review</button>
+                    </form>
+                    {% else %}
+                    <p>Please <a href="{% url 'auth:signin' %}">login</a> to write a review.</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Reviews List -->
+                <div class="existing-reviews" id="reviews-list" style="margin-top: 20px;">
+                    {% for review in product.reviews.all %}
+                    <div class="single-review">
+                        <div class="review-heading">
+                            <div>
+                                <h6>{{ review.user.first_name}} {{ review.user.last_name}}</h6>
+                                <div class="review-rating">
+                                    {% for i in review.get_rating_stars %}
+                                        <i class="fa fa-star"></i>
+                                    {% endfor %}
+                                    {% for i in review.get_empty_stars %}
+                                        <i class="fa fa-star-o"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <small>{{ review.created_at|date:"F d, Y" }}</small>
+                        </div>
+                        <h6>{{ review.title }}</h6>
+                        <p>{{ review.comment }}</p>
+                    </div>
+                    {% empty %}
+                    <p id="no-reviews-message">No reviews yet. Be the first to review!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                        <!-- /tab3  -->
+                    </div>
+                    <!-- /product tab content  -->
+                </div>
+            </div>
+            <!-- /product tab -->
+        </div>
+    </div>
+</div>
+<!-- /SECTION -->
 
-							<ul class="product-links">
-								<li>Share:</li>
-								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-								<li><a href="#"><i class="fa fa-envelope"></i></a></li>
-							</ul>
+<!-- Section -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title text-center">
+                    <h3 class="title">Related Products</h3>
+                </div>
+            </div>
 
-						</div>
-					</div>
-					<!-- /Product details -->
+            {% for related in related_products %}
+            <div class="col-md-3 col-xs-6">
+                <div class="product">
+                    <div class="product-img">
+                        {% with related.images.first as related_image %}
+                            {% if related_image %}
+                                <img src="{{ related_image.image.url }}" alt="{{ related.name }}">
+                            {% else %}
+                                <img src="{% static 'img/placeholder.png' %}" alt="No image">
+                            {% endif %}
+                        {% endwith %}
+                        {% if related.discount_price %}
+                            <div class="product-label">
+                                <span class="sale">-{{ discount_percent }}%</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="product-body">
+                        <p class="product-category">{{ related.category.name }}</p>
+                        <h3 class="product-name"><a  href="{% url 'products:product-detail' related.slug %}">{{ related.name }}</a></h3>
+                        <h4 class="product-price">
+                            GHS {{ related.discount_price|default:related.price }}
+                            {% if related.discount_price %}
+                                <del class="product-old-price">GHS {{ related.price }}</del>
+                            {% endif %}
+                        </h4>
+                        <div class="product-btns">
+                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
 
-					<!-- Product tab -->
-					<div class="col-md-12">
-						<div id="product-tab">
-							<!-- product tab nav -->
-							<ul class="tab-nav">
-								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-								<li><a data-toggle="tab" href="#tab2">Details</a></li>
-								<li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
-							</ul>
-							<!-- /product tab nav -->
+                            <a href="{% url 'products:product-detail' related.slug %}">
 
-							<!-- product tab content -->
-							<div class="tab-content">
-								<!-- tab1  -->
-								<div id="tab1" class="tab-pane fade in active">
-									<div class="row">
-										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-										</div>
-									</div>
-								</div>
-								<!-- /tab1  -->
+                                <i class="fa fa-eye"></i>
+                            </a>                        </div>
+                    </div>
+                    <div class="add-to-cart">
+                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
-								<!-- tab2  -->
-								<div id="tab2" class="tab-pane fade in">
-									<div class="row">
-										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-										</div>
-									</div>
-								</div>
-								<!-- /tab2  -->
-
-								<!-- tab3  -->
-								<div id="tab3" class="tab-pane fade in">
-									<div class="row">
-										<!-- Rating -->
-										<div class="col-md-3">
-											<div id="rating">
-												<div class="rating-avg">
-													<span>4.5</span>
-													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star-o"></i>
-													</div>
-												</div>
-												<ul class="rating">
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-														</div>
-														<div class="rating-progress">
-															<div style="width: 80%;"></div>
-														</div>
-														<span class="sum">3</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div style="width: 60%;"></div>
-														</div>
-														<span class="sum">2</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div></div>
-														</div>
-														<span class="sum">0</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div></div>
-														</div>
-														<span class="sum">0</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div></div>
-														</div>
-														<span class="sum">0</span>
-													</li>
-												</ul>
-											</div>
-										</div>
-										<!-- /Rating -->
-
-										<!-- Reviews -->
-										<div class="col-md-6">
-											<div id="reviews">
-												<ul class="reviews">
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
-															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
-															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
-															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
-												</ul>
-												<ul class="reviews-pagination">
-													<li class="active">1</li>
-													<li><a href="#">2</a></li>
-													<li><a href="#">3</a></li>
-													<li><a href="#">4</a></li>
-													<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-												</ul>
-											</div>
-										</div>
-										<!-- /Reviews -->
-
-										<!-- Review Form -->
-										<div class="col-md-3">
-											<div id="review-form">
-												<form class="review-form">
-													<input class="input" type="text" placeholder="Your Name">
-													<input class="input" type="email" placeholder="Your Email">
-													<textarea class="input" placeholder="Your Review"></textarea>
-													<div class="input-rating">
-														<span>Your Rating: </span>
-														<div class="stars">
-															<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
-															<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
-															<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
-															<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
-															<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
-														</div>
-													</div>
-													<button class="primary-btn">Submit</button>
-												</form>
-											</div>
-										</div>
-										<!-- /Review Form -->
-									</div>
-								</div>
-								<!-- /tab3  -->
-							</div>
-							<!-- /product tab content  -->
-						</div>
-					</div>
-					<!-- /product tab -->
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
-		<!-- /SECTION -->
-
-		<!-- Section -->
-		<div class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-
-					<div class="col-md-12">
-						<div class="section-title text-center">
-							<h3 class="title">Related Products</h3>
-						</div>
-					</div>
-
-					<!-- product -->
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="{% static '/img/product01.png" alt="">
-								<div class="product-label">
-									<span class="sale">-30%</span>
-								</div>
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-							</div>
-						</div>
-					</div>
-					<!-- /product -->
-
-					<!-- product -->
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="{% static '/img/product02.png' %}" alt="">
-								<div class="product-label">
-									<span class="new">NEW</span>
-								</div>
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-							</div>
-						</div>
-					</div>
-					<!-- /product -->
-
-					<div class="clearfix visible-sm visible-xs"></div>
-
-					<!-- product -->
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="{% static '/img/product03.png' %}" alt="">
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-							</div>
-						</div>
-					</div>
-					<!-- /product -->
-
-					<!-- product -->
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="{% static '/img/product04.png' %}" alt="">
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-							</div>
-						</div>
-					</div>
-					<!-- /product -->
-
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
 		<!-- /Section -->
 
 		<!-- NEWSLETTER -->
@@ -541,4 +342,394 @@
 			</div>
 			<!-- /container -->
 		</div>
+
+        {% block extra_js %}
+<script>
+// Utility function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Toast notification function
+function showToast(message, type = 'success') {
+    // Implement your toast notification here or use a library
+    alert(message); // Simple alert as fallback
+}
+
+// Update cart display function
+function updateCartDisplay() {
+    // You can implement this to update cart count in the header
+    // Example: fetch and update cart count
+    fetch('/products/api/cart/count/')
+        .then(response => response.json())
+        .then(data => {
+            const cartCountElements = document.querySelectorAll('.cart-count');
+            cartCountElements.forEach(el => {
+                el.textContent = data.count;
+            });
+        });
+}
+
+// Update wishlist display function
+function updateWishlistDisplay() {
+    // You can implement this to update wishlist count in the header
+    fetch('/products/api/wishlist/count/')
+        .then(response => response.json())
+        .then(data => {
+            const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+            wishlistCountElements.forEach(el => {
+                el.textContent = data.count;
+            });
+        });
+}
+
+// Add to Cart Function
+async function addToCart(productId, quantity = 1, btnElement = null) {
+    try {
+        // Show loading state
+        if (btnElement) {
+            const icon = btnElement.querySelector('i');
+            if (icon) {
+                icon.classList.replace('fa-shopping-cart', 'fa-spinner');
+                icon.classList.add('fa-spin');
+            }
+            btnElement.disabled = true;
+        }
+
+        const response = await fetch(`/products/api/cart/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ quantity: quantity }),
+            credentials: 'include',
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Update cart display
+            updateCartDisplay();
+            
+            // Update button state
+            if (btnElement) {
+                const icon = btnElement.querySelector('i');
+                if (icon) {
+                    icon.classList.replace('fa-spinner', 'fa-shopping-cart');
+                    icon.classList.remove('fa-spin');
+                }
+                btnElement.disabled = false;
+            }
+            
+            // Show toast notification
+            showToast('Product added to cart!');
+        } else {
+            throw new Error(data.detail || 'Failed to add to cart');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast(error.message, 'error');
+        
+        // Reset button state on error
+        if (btnElement) {
+            const icon = btnElement.querySelector('i');
+            if (icon) {
+                icon.classList.replace('fa-spinner', 'fa-shopping-cart');
+                icon.classList.remove('fa-spin');
+            }
+            btnElement.disabled = false;
+        }
+    }
+}
+
+// Add to Wishlist Function
+async function addToWishlist(productId, btnElement = null) {
+    try {
+        // Show loading state
+        if (btnElement) {
+            const icon = btnElement.querySelector('i');
+            if (icon) {
+                icon.classList.replace('fa-heart-o', 'fa-spinner');
+                icon.classList.add('fa-spin');
+            }
+            btnElement.disabled = true;
+        }
+
+        const response = await fetch(`/products/api/wishlist/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            credentials: 'include',
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Update wishlist display
+            updateWishlistDisplay();
+            
+            // Update button state to show it's in wishlist
+            if (btnElement) {
+                const icon = btnElement.querySelector('i');
+                if (icon) {
+                    icon.classList.replace('fa-spinner', 'fa-heart');
+                    icon.classList.remove('fa-spin');
+                }
+                btnElement.disabled = false;
+                btnElement.onclick = () => removeFromWishlist(productId, btnElement);
+            }
+            
+            // Show toast notification
+            showToast('Product added to wishlist!');
+        } else {
+            throw new Error(data.detail || 'Failed to add to wishlist');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast(error.message, 'error');
+        
+        // Reset button state on error
+        if (btnElement) {
+            const icon = btnElement.querySelector('i');
+            if (icon) {
+                icon.classList.replace('fa-spinner', 'fa-heart-o');
+                icon.classList.remove('fa-spin');
+            }
+            btnElement.disabled = false;
+        }
+    }
+}
+
+// Remove from Wishlist Function (optional)
+async function removeFromWishlist(productId, btnElement = null) {
+    try {
+        if (btnElement) {
+            const icon = btnElement.querySelector('i');
+            if (icon) {
+                icon.classList.replace('fa-heart', 'fa-spinner');
+                icon.classList.add('fa-spin');
+            }
+            btnElement.disabled = true;
+        }
+
+        const response = await fetch(`/products/api/wishlist/${productId}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            credentials: 'include',
+        });
+        
+        if (response.ok) {
+            updateWishlistDisplay();
+            
+            if (btnElement) {
+                const icon = btnElement.querySelector('i');
+                if (icon) {
+                    icon.classList.replace('fa-spinner', 'fa-heart-o');
+                    icon.classList.remove('fa-spin');
+                }
+                btnElement.disabled = false;
+                btnElement.onclick = () => addToWishlist(productId, btnElement);
+            }
+            
+            showToast('Product removed from wishlist!');
+        } else {
+            const data = await response.json();
+            throw new Error(data.detail || 'Failed to remove from wishlist');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast(error.message, 'error');
+        
+        if (btnElement) {
+            const icon = btnElement.querySelector('i');
+            if (icon) {
+                icon.classList.replace('fa-spinner', 'fa-heart');
+                icon.classList.remove('fa-spin');
+            }
+            btnElement.disabled = false;
+        }
+    }
+}
+
+// Quantity input handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity input controls
+    document.querySelectorAll('.qty-up').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('input');
+            input.value = parseInt(input.value) + 1;
+        });
+    });
+
+    document.querySelectorAll('.qty-down').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('input');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        });
+    });
+
+    // Add to cart button handler
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', function() {
+            const quantity = parseInt(document.querySelector('.input-number input').value) || 1;
+            const productId = '{{ product.id }}';
+            addToCart(productId, quantity, this);
+        });
+    }
+
+    // Add to wishlist button handler
+    const addToWishlistBtn = document.querySelector('.product-btns li:first-child a');
+    if (addToWishlistBtn) {
+        addToWishlistBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productId = '{{ product.id }}';
+            addToWishlist(productId, this);
+        });
+    }
+
+    // Initialize cart and wishlist counts
+    updateCartDisplay();
+    updateWishlistDisplay();
+
+
+
+
+
+
+});
+
+
+    // Add this to your product detail JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+    // Review form submission
+    const reviewForm = document.getElementById('review-form');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const rating = document.querySelector('input[name="rating"]:checked');
+            const title = document.getElementById('review-title').value;
+            const comment = document.getElementById('review-comment').value;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const submitBtn = reviewForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            // Validate form
+            if (!rating || !title || !comment) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting...';
+            
+            // Prepare data
+            const data = {
+                rating: rating.value,
+                title: title,
+                comment: comment
+            };
+            
+            // Submit via AJAX
+            fetch(`/products/api/review/submit/{{ product.id }}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Review submitted successfully!');
+                    
+                    // Add new review to the list
+                    const noReviewsMsg = document.getElementById('no-reviews-message');
+                    if (noReviewsMsg) noReviewsMsg.remove();
+                    
+                    const reviewsList = document.getElementById('reviews-list');
+                    const newReview = document.createElement('div');
+                    newReview.className = 'single-review';
+                    newReview.innerHTML = `
+                        <div class="review-heading">
+                            <div>
+                                <h5>${data.review.user}</h5>
+                                <div class="review-rating">
+                                    ${data.review.stars.map(() => '<i class="fa fa-star"></i>').join('')}
+                                    ${data.review.empty_stars.map(() => '<i class="fa fa-star-o"></i>').join('')}
+                                </div>
+                            </div>
+                            <small>${data.review.created_at}</small>
+                        </div>
+                        <h6>${data.review.title}</h6>
+                        <p>${data.review.comment}</p>
+                    `;
+                    reviewsList.prepend(newReview);
+                    
+                    // Reset form
+                    reviewForm.reset();
+                } else {
+                    throw new Error(data.error || 'Failed to submit review');
+                }
+            })
+            .catch(error => {
+                showToast(error, 'error');
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+    }
+    
+    // Star rating interaction
+// Star rating interaction
+const stars = document.querySelectorAll('.rating-stars input');
+if (stars) {
+    stars.forEach(star => {
+        star.addEventListener('change', function() {
+            const labels = document.querySelectorAll('.rating-stars label');
+            // Reset all stars to default color
+            labels.forEach(label => {
+                label.style.color = '#ddd';
+            });
+            
+            // Highlight selected and previous stars
+            const checkedIndex = parseInt(this.value);
+            for (let i = 1; i <= checkedIndex; i++) {
+                const label = document.querySelector(`.rating-stars label[for="star-${i}"]`);
+                if (label) label.style.color = '#D10024'; // Highlight color
+            }
+        });
+    });
+}
+
+
+    });
+</script>
+{% endblock %}
 		{% endblock%}

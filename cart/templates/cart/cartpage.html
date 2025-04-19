@@ -1,0 +1,149 @@
+{% extends 'shalom_enterprise/layout.html' %}
+{% load static %}
+{% block title %}My Cart - Shalom Enterprise{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="{% url 'main:index' %}">Home</a></li>
+                    <li><a href="{% url 'products:all-products' %}">Products</a></li>
+                    <li class="active">My Cart</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="title">Your Shopping Cart</h3>
+            </div>
+            
+            <div class="col-md-9">
+                <!-- Cart items table -->
+                <div class="cart-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in products %}
+                            <tr>
+                                <td class="product-col">
+                                    <div class="product-widget">
+                                        <div class="product-img">
+                                            {% with item.product.images.all|first as image %}
+                                            <img src="{{ image.image.url }}" alt="{{ item.product.name }}">
+                                            {% endwith %}
+                                        </div>
+                                        <div class="product-body">
+                                            <h3 class="product-name">
+                                                <a href="{% url 'products:product-detail' slug=item.product.slug %}">{{ item.product.name }}</a>
+                                            </h3>
+                                            <p class="product-category">{{ item.product.category.name }}</p>
+                                            {% if item.product.brand %}
+                                            <p class="product-brand">Brand: {{ item.product.brand.name }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="price-col">
+                                    {% if item.product.discount_price %}
+                                    <span class="old-price">GHS {{ item.product.price }}</span>
+                                    <span class="new-price">GHS {{ item.product.discount_price }}</span>
+                                    {% else %}
+                                    <span>GHS {{ item.product.price }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="quantity-col">
+                                    <div class="quantity">
+                                        <form method="post" style="display: flex; align-items: center;justify-content: center; flex-direction: column; gap: 11px;" >
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input">
+                                            <button type="submit" class="btn btn-sm btn-primary ">Update</button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td class="total-col">
+                                    GHS {{ item.total_price }}
+                                    {% if item.total_discount > 0 %}
+                                    <div class="text-success">Saved: GHS {{ item.total_discount }}</div>
+                                    {% endif %}
+                                </td>
+                                <td class="action-col">
+                                    <form method="post" >
+                                        {% csrf_token %}
+                                        <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fa fa-trash"></i> Remove
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Your cart is empty</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <!-- Order summary -->
+                <div class="cart-summary">
+                    <div  style="margin-top: 10px;"   class="section-title">
+                        <h4 class="title">Order Summary</h4>
+                    </div>
+                    
+                    <div  style="margin-top: 10px;"  class="summary-row">
+                        <h5>Subtotal</h5>
+                        <div style="font-size: larger;">GHS {{ cart_subtotal }}</div>
+                    </div>
+                    <div style="margin-top: 10px;" class="summary-row">
+                        <h5>Total Savings</h5>
+                        <div  style="font-size: larger;" class="text-success">-GHS {{ total_savings }}</div>
+                    </div>
+                    <div  style="margin-top: 10px;"   class="summary-row">
+                        <div>Estimated Delivery</div>
+                        <div style="font-size: larger;">Free</div>
+                    </div>
+                    <hr>
+                    <div class="summary-row total-row">
+                        <div><strong>TOTAL</strong></div>
+                        <h4><strong>GHS {{ cart_total }}</strong></h4>
+                    </div>
+                    
+                    <div class="checkout-btn">
+                        <a style=" margin-top: 20px;" class="primary-btn btn-block">
+                            PROCEED TO CHECKOUT
+                        </a>
+                        <a style=" margin-top: 20px;" class="btn btn-default  btn-block">
+                            CONTINUE SHOPPING
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /SECTION -->
+
+{% endblock %}

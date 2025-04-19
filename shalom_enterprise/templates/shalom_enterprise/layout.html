@@ -23,7 +23,7 @@
 		<link type="text/css" rel="stylesheet" href="{% static 'css/slick-theme.css'  %}"/>
 
 		<!-- nouislider -->
-		<link type="text/css" rel="stylesheet" href="{% static 'css/nouislider.min.css '  %}"/>
+		<link type="text/css" rel="stylesheet" href="{% static 'css/nouislider.min.css'  %}"/>
 
 		<!-- Font Awesome Icon -->
 		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css'  %}">
@@ -46,13 +46,13 @@
 			<div id="top-header">
 				<div class="container">
 					<ul class="header-links pull-left">
-						<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+						<li><a href="#"><i class="fa fa-phone"></i> +233552180200</a></li>
 						<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
-						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
+						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Ghana Road</a></li>
 					</ul>
 					
 					<ul class="header-links pull-right" style="display: flex;flex-direction: row; align-items: center;">
-						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+						<li><a href="#"><i class="fa fa-dollar"></i> GHS</a></li>
 						{% if request.user.is_authenticated %}
 						<div class="dropdown">
 							<a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">
@@ -116,14 +116,14 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form>
-									<select class="input-select">
+								<form method="get" action="{% url 'products:all-products' %}">
+									<select class="input-select"  name="category" id="category-select">
 										<option value="0">All Categories</option>
-										<option value="1">Category 01</option>
-										<option value="1">Category 02</option>
+										<!-- Categories will be loaded here by JavaScript -->
 									</select>
-									<input class="input" placeholder="Search here">
-									<button class="search-btn">Search</button>
+									<input class="input" name="search" placeholder="Search  product here" 
+									value="{{ request.GET.search|default:'' }}">
+							 <button type="submit" class="search-btn">Search</button>
 								</form>
 							</div>
 						</div>
@@ -133,61 +133,52 @@
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
 								<!-- Wishlist -->
-								{% if  request.user.is_authenticated%}
-								<div>
-									<a href="#">
-										<i class="fa fa-heart-o"></i>
-										<span>Your Wishlist</span>
-										<div class="qty">2</div>
-									</a>
-								</div>
-								{%endif%}
+						<!-- In your header section, replace the cart and wishlist HTML with this: -->
 
-								<!-- /Wishlist -->
+<!-- Wishlist -->
+{% if request.user.is_authenticated %}
+<div class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" id="wishlist-toggle">
+        <i class="fa fa-heart-o"></i>
+        <span>Your Wishlist</span>
+        <div class="qty" id="wishlist-counter">{{ request.user.wishlist.count|default:0 }}</div>
+    </a>
+    <div class="cart-dropdown" id="wishlist-dropdown">
+        <div class="cart-list" id="wishlist-items">
+            <!-- Will be populated by JavaScript -->
+            <div class="empty-wishlist">Your wishlist is empty</div>
+        </div>
+        <div class="cart-btns">
+            <a >View Wishlist</a>
+        </div>
+    </div>
+</div>
+{% endif %}
 
-								<!-- Cart -->
-								{% if  request.user.is_authenticated%}
-								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										<i class="fa fa-shopping-cart"></i>
-										<span>Your Cart</span>
-										<div class="qty">3</div>
-									</a>
-									<div class="cart-dropdown">
-										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="{% static 'img/product01.png '%}" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="{%   static '/img/product02.png '%}" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-										</div>
-										<div class="cart-summary">
-											<small>3 Item(s) selected</small>
-											<h5>SUBTOTAL: $2940.00</h5>
-										</div>
-										<div class="cart-btns">
-											<a href="#">View Cart</a>
-											<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-										</div>
-									</div>
-								</div>
-								{%endif%}
+<!-- Cart -->
+{% if request.user.is_authenticated %}
+<div class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" id="cart-toggle">
+        <i class="fa fa-shopping-cart"></i>
+        <span>Your Cart</span>
+        <div class="qty" id="cart-counter">{{ request.user.cart_items.count|default:0 }}</div>
+    </a>
+    <div class="cart-dropdown" id="cart-dropdown">
+        <div class="cart-list" id="cart-items">
+            <!-- Will be populated by JavaScript -->
+            <div class="empty-cart">Your cart is empty</div>
+        </div>
+        <div class="cart-summary">
+            <small><span id="cart-total-items">0</span> Item(s) selected</small>
+            <h5>SUBTOTAL: $<span id="cart-subtotal">0.00</span></h5>
+        </div>
+        <div class="cart-btns">
+            <a href="{% url 'cart:cartproducts' %}">View Cart</a>
+            <a  >Checkout <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+{% endif %}
 								<!-- /Cart -->
 
 								<!-- Menu Toogle -->
@@ -218,14 +209,12 @@
 				<div id="responsive-nav">
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
-						<li class="active"><a href="{% url 'main:index'%}">Home</a></li>
-                        <li><a href="{% url 'products:all-products'%}">All Products</a></li>
+						<li class="{% if request.path == '/' %}active{% endif %}"><a href="{% url 'main:index'%}">Home</a></li>
+                        <li class="{% if request.path == '/products/all/' %}active{% endif %}"><a href="{% url 'products:all-products'%}">All Products</a></li>
 						<li><a href="#">Hot Deals</a></li>
-						<li><a href="#">Categories</a></li>
-						<li><a href="#">Laptops</a></li>
-						<li><a href="#">Smartphones</a></li>
-						<li><a href="#">Cameras</a></li>
-						<li><a href="#">Accessories</a></li>
+						<li><a href="#">Top Selling</a></li>
+
+						
 					</ul>
 					<!-- /NAV -->
 				</div>
@@ -250,11 +239,11 @@
 						<div class="col-md-3 col-xs-6">
 							<div class="footer">
 								<h3 class="footer-title">About Us</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
+								<p>Shalom Afrin Enterprise</p>
 								<ul class="footer-links">
-									<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-									<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-									<li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
+									<li><a ><i class="fa fa-map-marker"></i>1734 Ghana Road</a></li>
+									<li><a ><i class="fa fa-phone"></i>+233552180200</a></li>
+									<li><a ><i class="fa fa-envelope-o"></i>email@email.com</a></li>
 								</ul>
 							</div>
 						</div>
@@ -262,12 +251,8 @@
 						<div class="col-md-3 col-xs-6">
 							<div class="footer">
 								<h3 class="footer-title">Categories</h3>
-								<ul class="footer-links">
-									<li><a href="#">Hot deals</a></li>
-									<li><a href="#">Laptops</a></li>
-									<li><a href="#">Smartphones</a></li>
-									<li><a href="#">Cameras</a></li>
-									<li><a href="#">Accessories</a></li>
+								<ul class="footer-links" id="footer-categories">
+									<!-- Categories will be loaded here by JavaScript -->
 								</ul>
 							</div>
 						</div>
@@ -278,11 +263,10 @@
 							<div class="footer">
 								<h3 class="footer-title">Information</h3>
 								<ul class="footer-links">
-									<li><a href="#">About Us</a></li>
-									<li><a href="#">Contact Us</a></li>
-									<li><a href="#">Privacy Policy</a></li>
-									<li><a href="#">Orders and Returns</a></li>
-									<li><a href="#">Terms & Conditions</a></li>
+									<li><a >About Us</a></li>
+									<li><a >Contact Us</a></li>
+									<li><a >Privacy Policy</a></li>
+									<li><a >Terms & Conditions</a></li>
 								</ul>
 							</div>
 						</div>
@@ -291,11 +275,11 @@
 							<div class="footer">
 								<h3 class="footer-title">Service</h3>
 								<ul class="footer-links">
-									<li><a href="#">My Account</a></li>
-									<li><a href="#">View Cart</a></li>
-									<li><a href="#">Wishlist</a></li>
-									<li><a href="#">Track My Order</a></li>
-									<li><a href="#">Help</a></li>
+									<li><a >My Account</a></li>
+									<li><a >View Cart</a></li>
+									<li><a >Wishlist</a></li>
+									<li><a >My Orders</a></li>
+									<li><a >Help</a></li>
 								</ul>
 							</div>
 						</div>
@@ -322,7 +306,7 @@
 							</ul>
 							<span class="copyright">
 								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | shalom afric enterprise
 							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 							</span>
 						</div>
@@ -335,13 +319,453 @@
 		</footer>
 		<!-- /FOOTER -->
 
+		
+		
+		<!-- Add this JavaScript at the bottom of your template -->
+		
+		<script>
+			// Global cart and wishlist functions
+			document.addEventListener('DOMContentLoaded', function() {
+				if (document.getElementById('cart-counter')) {
+					updateCartDisplay();
+				}
+				if (document.getElementById('wishlist-counter')) {
+					updateWishlistDisplay();
+				}
+			});
+			
+			// Get CSRF token function
+			function getCookie(name) {
+				let cookieValue = null;
+				if (document.cookie && document.cookie !== '') {
+					const cookies = document.cookie.split(';');
+					for (let i = 0; i < cookies.length; i++) {
+						const cookie = cookies[i].trim();
+						if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			
+			// Add to Wishlist function
+			async function addToWishlist(productId, btnElement) {
+				try {
+					// Show loading state
+					if (btnElement) {
+						const icon = btnElement.querySelector('i');
+						if (icon) {
+							icon.classList.replace('fa-heart-o', 'fa-spinner', 'fa-spin');
+						}
+						btnElement.disabled = true;
+					}
+			
+					const response = await fetch(`/products/api/wishlist/${productId}/`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-CSRFToken': getCookie('csrftoken'),
+						},
+						credentials: 'include',
+					});
+					
+					const data = await response.json();
+					
+					if (response.ok) {
+						// Update wishlist display
+						updateWishlistDisplay();
+						
+						// Update button state
+						if (btnElement) {
+							const icon = btnElement.querySelector('i');
+							if (icon) {
+								icon.classList.replace('fa-spinner', 'fa-heart');
+								icon.classList.remove('fa-spin');
+							}
+							btnElement.disabled = false;
+						}
+						
+						// Show toast notification
+						showToast('Product added to wishlist!');
+					} else {
+						throw new Error(data.detail || 'Failed to add to wishlist');
+					}
+				} catch (error) {
+					console.error('Error:', error);
+					showToast(error.message, 'error');
+					
+					// Reset button state on error
+					if (btnElement) {
+						const icon = btnElement.querySelector('i');
+						if (icon) {
+							icon.classList.replace('fa-spinner', 'fa-heart-o');
+							icon.classList.remove('fa-spin');
+						}
+						btnElement.disabled = false;
+					}
+				}
+			}
+			
+			// Add to Cart function
+			async function addToCart(productId, quantity = 1, btnElement = null) {
+				try {
+					// Show loading state
+					if (btnElement) {
+						const icon = btnElement.querySelector('i');
+						if (icon) {
+							icon.classList.replace('fa-shopping-cart', 'fa-spinner', 'fa-spin');
+						}
+						btnElement.disabled = true;
+					}
+			
+					const response = await fetch(`/products/api/cart/${productId}/`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-CSRFToken': getCookie('csrftoken'),
+						},
+						body: JSON.stringify({ quantity: quantity }),
+						credentials: 'include',
+					});
+					
+					const data = await response.json();
+					
+					if (response.ok) {
+						// Update cart display
+						updateCartDisplay();
+						
+						// Update button state
+						if (btnElement) {
+							const icon = btnElement.querySelector('i');
+							if (icon) {
+								icon.classList.replace('fa-spinner', 'fa-shopping-cart');
+								icon.classList.remove('fa-spin');
+							}
+							btnElement.disabled = false;
+						}
+						
+						// Show toast notification
+						showToast('Product added to cart!');
+					} else {
+						throw new Error(data.detail || 'Failed to add to cart');
+					}
+				} catch (error) {
+					console.error('Error:', error);
+					showToast(error.message, 'error');
+					
+					// Reset button state on error
+					if (btnElement) {
+						const icon = btnElement.querySelector('i');
+						if (icon) {
+							icon.classList.replace('fa-spinner', 'fa-shopping-cart');
+							icon.classList.remove('fa-spin');
+						}
+						btnElement.disabled = false;
+					}
+				}
+			}
+			
+			// Update Cart Display
+			
+			async function updateCartDisplay() {
+    try {
+        const response = await fetch('/products/api/cart/', {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch cart');
+        
+        const data = await response.json();
+        console.log(data)
+        
+        // Update counter
+        const counter = document.getElementById('cart-counter');
+        if (counter) {
+            counter.textContent = data.summary.total_items || '0';
+        }
+        
+        // Update total items display
+        const totalItems = document.getElementById('cart-total-items');
+        if (totalItems) {
+            totalItems.textContent = data.summary.total_items || '0';
+        }
+        
+        // Update subtotal
+        const subtotal = document.getElementById('cart-subtotal');
+        if (subtotal) {
+            subtotal.textContent = `GHS ${data.summary.grand_total.toFixed(2)}` || 'GHS 0.00';
+        }
+        
+        // Update cart items
+        const cartItemsContainer = document.getElementById('cart-items');
+        if (cartItemsContainer) {
+            if (data.items && data.items.length > 0) {
+                let html = '';
+                data.items.forEach(item => {
+                    html += `
+                    <div class="product-widget" id="cart-item-${item.id}">
+                        <div class="product-img">
+                            <img src="${item.image_url || '/static/img/default-product.png'}" alt="${item.product.name}">
+                        </div>
+                        <div class="product-body">
+                            <h3 class="product-name"><a href="/products/detail/${item.product.slug}/">${item.product.name}</a></h3>
+                            <h4 class="product-price">
+                                <span class="qty">${item.quantity}x</span>
+                                GHS ${item.product.discount_price || item.product.price}
+                            </h4>
+                            <p>Total: GHS ${item.total_price}</p>
+                            ${item.total_discount > 0 ? `<p class="text-success">Saved: GHS ${item.total_discount}</p>` : ''}
+                        </div>
+                        <button class="delete" onclick="removeCartItem(${item.product.id})">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </div>`;
+                });
+                cartItemsContainer.innerHTML = html;
+                
+                // Remove "empty cart" message if it exists
+                const emptyMsg = cartItemsContainer.querySelector('.empty-cart');
+                if (emptyMsg) emptyMsg.remove();
+            } else {
+                cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+            }
+        }
+    } catch (error) {
+        console.error('Error updating cart:', error);
+    }
+}
+			// Update Wishlist Display
+			async function updateWishlistDisplay() {
+				try {
+					const response = await fetch('/products/api/wishlist/', {
+						credentials: 'include'
+					});
+					
+					if (!response.ok) throw new Error('Failed to fetch wishlist');
+					
+					const data = await response.json();
+					
+					
+					// Update counter
+					const counter = document.getElementById('wishlist-counter');
+					if (counter) {
+						counter.textContent = data.length || '0';
+					}
+					
+					// Update wishlist items
+					const wishlistContainer = document.getElementById('wishlist-items');
+					if (wishlistContainer) {
+						if (data && data.length > 0) {
+							let html = '';
+							data.forEach(item => {
+								console.log(item)
+								html += `
+								<div class="product-widget" id="wishlist-item-${item.id}">
+									<div class="product-img">
+										<img src="${item.product.image_url || '{% static "img/default-product.png" %'}" alt="${item.product.name}">
+									</div>
+									<div class="product-body">
+										<h3 class="product-name"><a href="/products/detail/${item.product.slug}/">${item.product.name}</a></h3>
+										<h4 class="product-price">$${item.product.discount_price || item.product.price}</h4>
+									</div>
+									<button class="delete" onclick="removeWishlistItem(${item.product.id})">
+										<i class="fa fa-close"></i>
+									</button>
+								</div>`;
+							});
+							wishlistContainer.innerHTML = html;
+							
+							// Remove "empty wishlist" message if it exists
+							const emptyMsg = wishlistContainer.querySelector('.empty-wishlist');
+							if (emptyMsg) emptyMsg.remove();
+						} else {
+							wishlistContainer.innerHTML = '<div class="empty-wishlist">Your wishlist is empty</div>';
+						}
+					}
+				} catch (error) {
+					console.error('Error updating wishlist:', error);
+				}
+			}
+			
+			// Remove Cart Item
+			async function removeCartItem(itemId) {
+				try {
+					const response = await fetch(`/products/api/cart/${itemId}/`, {
+						method: 'DELETE',
+						headers: {
+							'X-CSRFToken': getCookie('csrftoken'),
+						},
+						credentials: 'include',
+					});
+					
+					if (response.ok) {
+						updateCartDisplay();
+						showToast('Item removed from cart');
+					} else {
+						throw new Error('Failed to remove item');
+					}
+				} catch (error) {
+					console.error('Error:', error);
+					showToast(error.message, 'error');
+				}
+			}
+			
+			// Remove Wishlist Item
+			async function removeWishlistItem(itemId) {
+				try {
+					const response = await fetch(`/products/api/wishlist/${itemId}/`, {
+						method: 'DELETE',
+						headers: {
+							'X-CSRFToken': getCookie('csrftoken'),
+						},
+						credentials: 'include',
+					});
+					
+					if (response.ok) {
+						updateWishlistDisplay();
+						showToast('Item removed from wishlist');
+					} else {
+						throw new Error('Failed to remove item');
+					}
+				} catch (error) {
+					console.error('Error:', error);
+					showToast(error.message, 'error');
+				}
+			}
+			
+			// Toast Notification
+			function showToast(message, type = 'success') {
+				// Remove existing toasts
+				const existingToasts = document.querySelectorAll('.custom-toast');
+				existingToasts.forEach(toast => toast.remove());
+				
+				// Create toast element
+				const toast = document.createElement('div');
+				toast.className = `custom-toast ${type}`;
+				toast.textContent = message;
+				document.body.appendChild(toast);
+				
+				// Show toast
+				setTimeout(() => {
+					toast.classList.add('show');
+				}, 10);
+				
+				// Hide after 3 seconds
+				setTimeout(() => {
+					toast.classList.remove('show');
+					setTimeout(() => toast.remove(), 300);
+				}, 3000);
+			}
+			
+			// Initialize dropdown toggles
+			
+		</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Function to load categories into both footer and dropdown
+			async function loadCategories() {
+				try {
+					const response = await fetch('/products/api/categories/');
+					const data = await response.json();
+					
+					// 1. Load into search dropdown
+					const select = document.getElementById('category-select');
+					if (select) {
+						// Clear existing options except the first one
+						while (select.options.length > 1) {
+							select.remove(1);
+						}
+						
+						// Function to add categories recursively to dropdown
+						function addToDropdown(categories, level = 0) {
+							categories.forEach(category => {
+								const option = document.createElement('option');
+								option.value = category.id;  // Using slug for cleaner URLs
+								option.textContent = '➤ '.repeat(level) + category.name;
+								option.className = `category-level-${level}`;
+								select.appendChild(option);
+								
+								if (category.children && category.children.length > 0) {
+									addToDropdown(category.children, level + 1);
+								}
+							});
+						}
+						
+						addToDropdown(data.categories);
+					}
+					
+					// 2. Load into footer
+					const footerList = document.getElementById('footer-categories');
+					if (footerList) {
+						footerList.innerHTML = ''; // Clear existing
+						
+						// Function to add top-level categories to footer
+						function addToFooter(categories) {
+							categories.forEach(category => {
+								const li = document.createElement('li');
+								const a = document.createElement('a');
+								a.href = ``;
+								a.textContent = category.name;
+								li.appendChild(a);
+								footerList.appendChild(li);
+							});
+						}
+						
+						// Only show top-level categories in footer
+						addToFooter(data.categories.filter(cat => !cat.parent_id));
+					}
+					
+				} catch (error) {
+					console.error('Error loading categories:', error);
+					// Fallback content
+					const footerList = document.getElementById('footer-categories');
+					if (footerList) {
+						footerList.innerHTML = `
+							<li><a href="/products/hot-deals/">Hot deals</a></li>
+							<li><a href="/products/category/laptops/">Laptops</a></li>
+							<li><a href="/products/category/smartphones/">Smartphones</a></li>
+						`;
+					}
+				}
+			}
+			
+			// Load categories when page loads
+			loadCategories();
+		});
+		</script>
 		<!-- jQuery Plugins -->
+		 
 		<script src="{% static 'js/jquery.min.js' %}"></script>
 		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script src="{% static 'js/slick.min.js' %}"></script>
 		<script src="{% static 'js/nouislider.min.js' %}"></script>
 		<script src="{% static 'js/jquery.zoom.min.js' %}"></script>
 		<script src="{% static 'js/main.js' %}"></script>
-
+		
+		<script>
+			// Simple dropdown implementation without Bootstrap JS
+			document.addEventListener('DOMContentLoaded', function() {
+				document.querySelectorAll('.dropdown-toggle').forEach(function(toggle) {
+					toggle.addEventListener('click', function(e) {
+						e.preventDefault();
+						const dropdown = this.closest('.dropdown');
+						const menu = dropdown.querySelector('.dropdown-menu');
+						
+						// Toggle show class
+						menu.classList.toggle('show');
+						
+						// Close when clicking outside
+						document.addEventListener('click', function closeDropdown(e) {
+							if (!dropdown.contains(e.target)) {
+								menu.classList.remove('show');
+								document.removeEventListener('click', closeDropdown);
+							}
+						});
+					});
+				});
+			});
+			</script>
 	</body>
 </html>

@@ -43,12 +43,18 @@ INSTALLED_APPS = [
     'main',
     'authentication',
     "shalom_enterprise",
-    "products"
+    "products",
+    'rest_framework',
+    'corsheaders',
+    'cart',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+      'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -69,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -125,6 +132,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -140,3 +151,23 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL")  # Make sure this matches exactly
 EMAIL_HOST_PASSWORD =  os.getenv("EMAIL_PASSWORD")
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Your frontend URL
+    "http://127.0.0.1:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True  # To allow cookies
