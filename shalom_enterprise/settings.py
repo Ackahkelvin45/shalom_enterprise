@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-06sxf-rs^o_kplj1k-m@2ji%9f#8d45*usxhxdnl3s4%1di@2q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -166,10 +166,6 @@ REST_FRAMEWORK = {
 
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Your frontend URL
-    "http://127.0.0.1:3000",
-    "http://0.0.0.0:8000",
-]
+CORS_ALLOWED_ORIGINS = ["*"]
 
 CORS_ALLOW_CREDENTIALS = True  # To allow cookies
