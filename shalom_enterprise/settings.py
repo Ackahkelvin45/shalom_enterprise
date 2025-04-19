@@ -175,3 +175,9 @@ CORS_ALLOWED_ORIGINS = [
     ]
 
 CORS_ALLOW_CREDENTIALS = True  # To allow cookies
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://shalom-enterprise-1.onrender.com',
+    # Add other trusted origins if needed
+]
