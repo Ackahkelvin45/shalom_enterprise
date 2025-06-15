@@ -72,12 +72,11 @@
                                 </td>
                                 <td class="quantity-col">
                                     <div class="quantity">
-                                        <form method="post" style="display: flex; align-items: center;justify-content: center; flex-direction: column; gap: 11px;" >
-                                            {% csrf_token %}
-                                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input">
-                                            <button type="submit" class="btn btn-sm btn-primary ">Update</button>
-                                        </form>
+                                      <form method="post" action="{% url 'cart:update_cart' product_id=item.product.id %}" style="display: flex; align-items: center;justify-content: center; flex-direction: column; gap: 11px;">
+    {% csrf_token %}
+    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input">
+    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+</form>
                                     </div>
                                 </td>
                                 <td class="total-col">
@@ -87,13 +86,12 @@
                                     {% endif %}
                                 </td>
                                 <td class="action-col">
-                                    <form method="post" >
-                                        {% csrf_token %}
-                                        <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-trash"></i> Remove
-                                        </button>
-                                    </form>
+                                <form method="post" action="{% url 'cart:remove_from_cart' product_id=item.product.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger btn-sm">
+        <i class="fa fa-trash"></i> Remove
+    </button>
+</form>
                                 </td>
                             </tr>
                             {% empty %}
@@ -132,9 +130,10 @@
                     </div>
                     
                     <div class="checkout-btn">
-                        <a style=" margin-top: 20px;" class="primary-btn btn-block">
-                            PROCEED TO CHECKOUT
-                        </a>
+                        <!-- Change the confirm order button in cart/cartpage.html -->
+<a style=" margin-top: 20px;" href="{% url 'checkout:confirm_order' %}" class="primary-btn btn-block">
+    CONFIRM ORDER 
+</a>
                         <a style=" margin-top: 20px;" class="btn btn-default  btn-block">
                             CONTINUE SHOPPING
                         </a>

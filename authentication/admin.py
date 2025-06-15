@@ -2,7 +2,12 @@ from django.contrib import admin
 from .models import CustomUser,OTP
 
 # Register your models here.
+from unfold.admin import ModelAdmin
 
-admin.site.register(CustomUser)
-admin.site.register(OTP)
 
+
+
+
+@admin.register(CustomUser)
+class CustomAdminClass(ModelAdmin):
+    pass

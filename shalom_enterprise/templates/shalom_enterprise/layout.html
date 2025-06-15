@@ -11,6 +11,9 @@
 
             {% block title %}Shalom Enterprise{% endblock %}
         </title>
+		<!-- In your layout.html, make sure these are included -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -72,7 +75,7 @@
 									</div>
 									<!-- Account Links -->
 									<div class="account-item">
-										<a href="#"><i class="fa fa-user"></i> Profile</a>
+										<a href="{% url 'auth:profile' %}"><i class="fa fa-user"></i> Profile</a>
 									</div>
 									
 									<div class="account-item">
@@ -503,7 +506,9 @@
         if (cartItemsContainer) {
             if (data.items && data.items.length > 0) {
                 let html = '';
+			
                 data.items.forEach(item => {
+					console.log(item)
                     html += `
                     <div class="product-widget" id="cart-item-${item.id}">
                         <div class="product-img">
@@ -564,10 +569,10 @@
 								html += `
 								<div class="product-widget" id="wishlist-item-${item.id}">
 									<div class="product-img">
-										<img src="${item.product.image_url || '{% static "img/default-product.png" %'}" alt="${item.product.name}">
+										<img src="${item.product.main_image || '{% static "img/default-product.png" %'}" alt="${item.product.name}">
 									</div>
 									<div class="product-body">
-										<h3 class="product-name"><a href="/products/detail/${item.product.slug}/">${item.product.name}</a></h3>
+										<h3 class="product-name"><a href="/products/detial/${item.product.slug}/">${item.product.name}</a></h3>
 										<h4 class="product-price">$${item.product.discount_price || item.product.price}</h4>
 									</div>
 									<button class="delete" onclick="removeWishlistItem(${item.product.id})">

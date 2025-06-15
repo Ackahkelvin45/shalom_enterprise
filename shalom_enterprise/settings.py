@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,7 +36,11 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+       "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "django.contrib.admin",  # required
+ 
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -47,6 +53,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'cart',
+    'checkout'
+  
 ]
 
 MIDDLEWARE = [
@@ -75,6 +83,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+
                 
             ],
         },
@@ -89,8 +99,12 @@ WSGI_APPLICATION = 'shalom_enterprise.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':os.getenv('DB_NAME'),
+        'USER':os.getenv('DB_USER'),
+        'PASSWORD':os.getenv('DB_PASSWORD'),
+        'HOST':os.getenv('DB_HOST'),
+        'PORT':os.getenv('DB_PORT'),
     }
 }
 
@@ -187,3 +201,36 @@ CSRF_TRUSTED_ORIGINS = [
     
 
 ]
+
+
+UNFOLD = {
+    "SITE_TITLE": "Shalom Afric Enterprise",
+    "SITE_HEADER": "Shalom Afric Enterprise",
+    "DASHBOARD_CALLBACK": "shalom_enterprise.dashboard.dashboard_callback",
+
+    "SITE_ICON": {
+        "light": "/static/img/image.png",  # Path relative to static/
+        "dark": "/static/img/image.png",
+    },
+    "DARK_MODE": True,
+    "LOGIN": {
+        "image": "/static/img/hotdeal.png",  # Removed duplicate 'static/'
+            "title": "Welcome to Shalom Afric Enterprise Admin Portal",
+        "description": "Please enter your credentials",
+        
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+    },
+
+       "DASHBOARD_CALLBACK": "shalom_enterprise.dashboard.dashboard_callback",
+    
+   
+     "TEMPLATES": {
+        "DASHBOARD": "admin/dashboard.html",  # Explicitly point to your template
+    },
+
+    
+}
+

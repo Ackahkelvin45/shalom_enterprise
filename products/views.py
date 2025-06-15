@@ -22,8 +22,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import ProductCategory
 from .serializer import ProductCategorySerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def categories_json(request):
     categories = ProductCategory.objects.filter(is_active=True, parent__isnull=True)
     serializer = ProductCategorySerializer(
@@ -135,10 +139,13 @@ def product_detail(request, slug):
 @api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def wishlist_api(request, product_id=None):
+    # Common serializer context setup
+    serializer_context = {'request': request}
+    
     if request.method == 'GET':
         # Get user's wishlist
         wishlist = Wishlist.objects.filter(user=request.user)
-        serializer = WishlistSerializer(wishlist, many=True)
+        serializer = WishlistSerializer(wishlist, many=True, context=serializer_context)
         return Response(serializer.data)
 
     elif request.method == 'POST':
@@ -149,7 +156,7 @@ def wishlist_api(request, product_id=None):
             product=product
         )
         if created:
-            serializer = WishlistSerializer(wishlist_item)
+            serializer = WishlistSerializer(wishlist_item, context=serializer_context)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'detail': 'Product already in wishlist.'}, status=status.HTTP_200_OK)
 
@@ -158,8 +165,8 @@ def wishlist_api(request, product_id=None):
         wishlist_item = get_object_or_404(Wishlist, user=request.user, product_id=product_id)
         wishlist_item.delete()
         return Response({'detail': 'Product removed from wishlist.'}, status=status.HTTP_204_NO_CONTENT)
-
-
+    
+    
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def cart_api(request, product_id=None):

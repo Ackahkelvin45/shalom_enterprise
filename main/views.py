@@ -13,9 +13,9 @@ def index_view(request):
     
     # Get products created in the last 2 days that are active
     products = Product.objects.filter(
-        created_at__gte=two_days_ago,
+
         is_active=True
-    ).order_by('-created_at').select_related('category', 'brand').prefetch_related(
+    ).order_by('-created_at')[:10].select_related('category', 'brand').prefetch_related(
         'images',
         Prefetch('reviews', queryset=ProductReview.objects.all())  # Explicit prefetch
     )

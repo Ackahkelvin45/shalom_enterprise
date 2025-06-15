@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -80,8 +83,7 @@ class ProductImage(models.Model):
         return f"Image for {self.product.name}"
    
 
-# models.py
-from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -153,3 +155,91 @@ class ProductReview(models.Model):
     
     def get_empty_stars(self):
         return range(5 - self.rating)
+    
+
+
+
+class HotDeal(models.Model):
+    """Model for managing product deals with either percentage discount or fixed price"""
+    product = models.ForeignKey(
+        Product, 
+        on_delete=models.CASCADE,
+        related_name='hot_deals'
+    )
+    discount_percentage = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text="Percentage discount (e.g., 20 for 20% off)"
+    )
+    current_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text="Automatically calculated current price"
+    )
+    fixed_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text="Fixed special price (overrides percentage discount)"
+    )
+    start_date = models.DateTimeField(
+        default=timezone.now,
+        help_text="When the deal should become active"
+    )
+    end_date = models.DateTimeField(
+        help_text="When the deal should expire"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Toggle deal on/off"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-start_date']
+        verbose_name = "Hot Deal"
+        verbose_name_plural = "Hot Deals"
+
+    def __str__(self):
+        return f"Hot Deal for {self.product.name}"
+
+    def clean(self):
+        # Validate that at least one pricing option is set
+        if not self.discount_percentage and not self.fixed_price:
+            raise ValidationError("Either discount percentage or fixed price must be set")
+        
+        # Validate that end date is after start date
+        if self.end_date and self.end_date <= self.start_date:
+            raise ValidationError("End date must be after start date")
+
+        # Calculate and set current_price during validation
+        self._calculate_current_price()
+
+    def save(self, *args, **kwargs):
+        # Calculate current price before saving
+        self._calculate_current_price()
+        super().save(*args, **kwargs)
+
+    def _calculate_current_price(self):
+        """Internal method to calculate and set current_price"""
+        if self.fixed_price is not None:
+            self.current_price = self.fixed_price
+        elif self.discount_percentage is not None and self.product.price is not None:
+            discounted = self.product.price * (100 - self.discount_percentage) / 100
+            self.current_price = max(0, discounted)  # Ensure price doesn't go negative
+        else:
+            self.current_price = None
+
+    @property
+    def is_currently_active(self):
+        """Check if the deal is currently active based on dates"""
+        now = timezone.now()
+        return (self.is_active and 
+                self.start_date <= now <= self.end_date)
+

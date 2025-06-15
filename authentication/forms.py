@@ -1,7 +1,30 @@
 # forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import CustomUser,ShippingAddress
+
+
+GHANA_REGIONS = [
+    ('', 'Select Region'),
+    ('Ahafo', 'Ahafo'),
+    ('Ashanti', 'Ashanti'),
+    ('Bono', 'Bono'),
+    ('Bono East', 'Bono East'),
+    ('Central', 'Central'),
+    ('Eastern', 'Eastern'),
+    ('Greater Accra', 'Greater Accra'),
+    ('North East', 'North East'),
+    ('Northern', 'Northern'),
+    ('Oti', 'Oti'),
+    ('Savannah', 'Savannah'),
+    ('Upper East', 'Upper East'),
+    ('Upper West', 'Upper West'),
+    ('Volta', 'Volta'),
+    ('Western', 'Western'),
+    ('Western North', 'Western North'),
+]
+
+
 
 class CustomUserCreationForm(UserCreationForm):
     confirm_password = forms.CharField(
@@ -31,3 +54,18 @@ class CustomUserCreationForm(UserCreationForm):
             raise forms.ValidationError("Passwords do not match.")
 
         return cleaned_data
+    
+
+
+# forms.py
+from django import forms
+from .models import ShippingAddress
+class ShippingAddressForm(forms.ModelForm):
+    region = forms.ChoiceField(choices=GHANA_REGIONS, widget=forms.Select(attrs={'class': 'form-control'}))
+    
+    class Meta:
+        model = ShippingAddress
+        fields = ['full_name', 'phone', 'address_line_1', 'address_line_2', 'city', 'region', 'is_default']
+        widgets = {
+            'is_default': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

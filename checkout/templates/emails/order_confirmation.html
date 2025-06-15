@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #D10024; color: white; padding: 15px; text-align: center; }
+        .content { padding: 20px; background-color: #f9f9f9; }
+        .order-info { background: white; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .order-items { width: 100%; border-collapse: collapse; }
+        .order-items th, .order-items td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        .total-row { font-weight: bold; }
+        .footer { margin-top: 20px; text-align: center; font-size: 12px; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Order Confirmation</h1>
+            <p>Your order #{{ order.order_number }} has been received</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello {{ order.user.first_name }},</p>
+            <p>Thank you for your order! We're getting it ready to be shipped.</p>
+            
+            <div class="order-info">
+                <h3>Order Details</h3>
+                <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+                <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y" }}</p>
+                <p><strong>Payment Method:</strong> Cash on Delivery</p>
+                
+                <h4>Shipping Address</h4>
+                <p>
+                    {{ order.shipping_address.full_name }}<br>
+                    {{ order.shipping_address.address_line_1 }}<br>
+                    {% if order.shipping_address.address_line_2 %}
+                        {{ order.shipping_address.address_line_2 }}<br>
+                    {% endif %}
+                    {{ order.shipping_address.city }}, {{ order.shipping_address.region }}<br>
+                    Phone: {{ order.shipping_address.phone }}
+                </p>
+            </div>
+            
+            <h3>Order Summary</h3>
+            <table class="order-items">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>GHS {{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">Subtotal:</td>
+                        <td>GHS {{ order.total_amount|add:order.discount_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Discount:</td>
+                        <td>-GHS {{ order.discount_amount }}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="2">Total:</td>
+                        <td>GHS {{ order.total_amount }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+            
+            <p>You can track your order status by logging into your account.</p>
+            <p>If you have any questions, please contact our customer service.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© {% now "Y" %} Shalom Enterprise. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

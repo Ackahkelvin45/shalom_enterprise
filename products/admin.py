@@ -1,13 +1,19 @@
 from django.contrib import admin
-from .models import ProductCategory, Product, ProductImage,Brand,Cart,Wishlist,ProductReview
+from .models import ProductCategory, Product, ProductImage,Brand,Cart,Wishlist,ProductReview,HotDeal
+from unfold.admin import ModelAdmin
 
 # Register your models here.
 
 
-admin.site.register(ProductCategory)
-admin.site.register(Product)
-admin.site.register(ProductImage)   
-admin.site.register(Brand)
-admin.site.register(Cart)
-admin.site.register(Wishlist)
-admin.site.register(ProductReview)
+
+@admin.register(ProductCategory)
+@admin.register(Product)
+@admin.register(ProductImage)
+@admin.register(Brand)
+@admin.register(Cart)
+@admin.register(Wishlist)
+@admin.register(ProductReview)
+@admin.register(HotDeal)
+
+class CustomAdminClass(ModelAdmin):
+    pass
