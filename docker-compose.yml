@@ -5,7 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    command: >
+      bash -c "python manage.py collectstatic --noinput &&
+               python manage.py migrate &&
+               gunicorn --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120 shalom_enterprise.wsgi:application"
     volumes:
+      - .:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/mediafiles
     ports:
@@ -20,15 +25,20 @@ services:
       - DB_PASSWORD=kelvin
       - DB_HOST=db
       - DB_PORT=5432
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65535
+      - net.ipv4.tcp_fin_timeout=30
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
     networks:
-      - app-network
+      app-network:
+        aliases:
+          - web
 
   db:
-    image: postgres:15-alpine  # Use Alpine-based image for smaller size
+    image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
