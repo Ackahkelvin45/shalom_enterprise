@@ -101,11 +101,11 @@ WSGI_APPLICATION = 'shalom_enterprise.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':os.getenv('DB_NAME'),
-        'USER':os.getenv('DB_USER'),
-        'PASSWORD':os.getenv('DB_PASSWORD'),
-        'HOST':'db',
-        'PORT':os.getenv('DB_PORT'),
+        'NAME': 'shalom_afric',
+        'USER': 'kelvin',
+        'PASSWORD': 'kelvin',
+        'HOST': 'db',  # Must match service name in docker-compose
+        'PORT': '5432',
     }
 }
 
