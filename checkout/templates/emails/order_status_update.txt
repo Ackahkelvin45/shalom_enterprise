@@ -1,0 +1,12 @@
+Hello {{ user.first_name }},
+
+Your order #{{ order.order_number }} has been updated to: {{ status }}
+
+Order details:
+- Total amount: ${{ order.total_amount }}
+- Shipping address: {{ order.shipping_address }}
+
+Thank you for shopping with us!
+
+Best regards,
+The Store Team

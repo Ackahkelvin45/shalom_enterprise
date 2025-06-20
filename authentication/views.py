@@ -58,7 +58,7 @@ def signup(request):
         # Extract data from POST
         first_name = request.POST.get('first_name', '').strip()
         last_name = request.POST.get('last_name', '').strip()
-        email = request.POST.get('email', '').strip()
+        email = request.POST.get('email', '').strip().lower()  # Normalize email
         password = request.POST.get('password', '')
         confirm_password = request.POST.get('confirm_password', '')
         phone_number = request.POST.get('phone_number', '').strip()
@@ -76,29 +76,43 @@ def signup(request):
             messages.error(request, "Password must contain at least one capital letter and one number.")
             return render(request, 'authentication/signup.html')
 
+        # Check for existing email or phone number before creating user
+        error_messages = []
+        if CustomUser.objects.filter(email__iexact=email).exists():
+            error_messages.append("This email is already registered. Please use a different email or log in.")
+        
+        if CustomUser.objects.filter(phone_number=phone_number).exists():
+            error_messages.append("This phone number is already registered. Please use a different number or log in.")
+        
+        if error_messages:
+            for msg in error_messages:
+                messages.error(request, msg)
+            return render(request, 'authentication/signup.html')
+
         try:
             user = CustomUser(
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
                 phone_number=phone_number,
-                is_verified=False  # User not verified until OTP confirmation
+                is_verified=False
             )
-            user.set_password(password)  # Hash the password
+            user.set_password(password)
             user.save()
 
             # Generate and send OTP
             create_otp_for_user(user)
 
             return redirect('auth:verify_otp', user_id=user.id)
+            
         except Exception as e:
-            messages.error(request, f"An error occurred: {e}")
+            # Log the actual error for debugging
+            print(f"Error creating user: {str(e)}")
+            # Show generic error message to user
+            messages.error(request, "We encountered an issue creating your account. Please try again.")
             return render(request, 'authentication/signup.html')
             
-    # For GET requests, simply render the signup template
     return render(request, 'authentication/signup.html')
-
-
 
 def verify_otp(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
@@ -307,7 +321,15 @@ def editProfile(request):
 def profile(request):
     user = request.user
     wishlist_items = Wishlist.objects.filter(user=user).all()
+    
+    # Get filter parameter from request
+    status_filter = request.GET.get('status', 'confirmed')
+    
+    # Filter orders based on status
     orders = Order.objects.filter(user=user).prefetch_related('items')
+    if status_filter != 'all':
+        orders = orders.filter(status=status_filter)
+    
     shipping_addresses = ShippingAddress.objects.filter(user=user).order_by('-is_default', '-created_at')
     
     # Prepare addresses with their edit forms
@@ -324,8 +346,11 @@ def profile(request):
         'orders': orders,
         'addresses_with_forms': addresses_with_forms,
         'address_form': ShippingAddressForm(),
+        'status_filter': status_filter,
+        'order_statuses': Order.ORDER_STATUS,
     }
     return render(request, 'authentication/profile.html', context)
+
 
 @login_required
 def add_shipping_address(request):

@@ -1,6 +1,6 @@
 {% extends 'shalom_enterprise/layout.html' %}
 {% load static %}
-{% block title %}My Profile - Shalom Enterprise{% endblock %}
+{% block title %}My Profile - SA Express{% endblock %}
 
 {% block content %}
 
@@ -616,126 +616,337 @@ document.addEventListener('DOMContentLoaded', function() {
                         <!-- /ACCOUNT DETAILS TAB -->
                         
                         <!-- ORDERS TAB -->
-                        <div class="tab-pane" id="orders">
-                            <div class="profile-section">
-                                <h3 class="profile-section-title">
-                                    <i class="fa fa-shopping-bag"></i> My Orders
-                                </h3>
-                                
-                                {% if orders %}
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Order #</th>
-                                                    <th>Date</th>
-                                                    <th>Items</th>
-                                                    <th>Total</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for order in orders %}
-                                                <tr>
-                                                    <td>{{ order.order_number }}</td>
-                                                    <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                    <td>{{ order.items.count }}</td>
-                                                    <td>GHS {{ order.total_amount }}</td>
-                                                    <td>
-                                                        <span class="label 
-                                                            {% if order.status == 'completed' %}label-success
-                                                            {% elif order.status == 'processing' %}label-primary
-                                                            {% elif order.status == 'cancelled' %}label-danger
-                                                            {% else %}label-default{% endif %}">
-                                                            {{ order.get_status_display }}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        {% if order.status == 'pending' %}
- <a href="{% url 'checkout:order_confirmation' order.id %}"  class="btn btn-xs btn-default">
-                                                            <i class="fa fa-eye"></i> View
-                                                        </a>
-                                                        {% else%}
- <a href="{% url 'checkout:order_detail' order.id %}"  class="btn btn-xs btn-default">
-                                                            <i class="fa fa-eye"></i> View
-                                                        </a>
-                                                        {% endif %}
-
-                                                   
-                                                       
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                       <!-- ORDERS TAB -->
+<div class="tab-pane" id="orders">
+    <div class="profile-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="profile-section-title m-0">
+                <i class="fa fa-shopping-bag"></i> My Orders
+            </h3>
+            
+            <!-- Status Filter Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="orderFilterDropdown" 
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-filter"></i> 
+                    {% if status_filter == 'all' %}All Orders{% else %}
+                    {{ status_filter|title }} Orders
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderFilterDropdown">
+                    <a class="dropdown-item2 {% if status_filter == 'confirmed' %}active{% endif %}" 
+                       href="?status=confirmed">
+                        Confirmed Orders
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    {% for status in order_statuses %}
+                        <a class="dropdown-item2 {% if status_filter == status.0 %}active{% endif %}" 
+                           href="?status={{ status.0 }}">
+                            {{ status.1 }}
+                        </a>
+                    {% endfor %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item2 {% if status_filter == 'all' %}active{% endif %}" 
+                       href="?status=all">
+                        All Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% if orders %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Order #</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.order_number }}</td>
+                            <td>{{ order.created_at|date:"M d, Y" }}</td>
+                            <td>{{ order.items.count }}</td>
+                            <td>GHS {{ order.total_amount }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if order.status == 'completed' %}badge-success
+                                    {% elif order.status == 'processing' %}badge-primary
+                                    {% elif order.status == 'cancelled' %}badge-danger
+                                    {% elif order.status == 'confirmed' %}badge-info
+                                    {% else %}badge-secondary{% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if order.status == 'pending' %}
+                                    <a href="{% url 'checkout:order_confirmation' order.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
                                 {% else %}
-                                    <div class="alert alert-info">
-                                        You haven't placed any orders yet.
-                                        <a href="{% url 'products:all-products' %}" class="alert-link">Start shopping now!</a>
-                                    </div>
+                                    <a href="{% url 'checkout:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
                                 {% endif %}
-                            </div>
-                        </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Optional: Add pagination if needed -->
+            <!--
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Orders pagination">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            -->
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fa fa-info-circle"></i> 
+                {% if status_filter != 'all' %}
+                    You don't have any {{ status_filter }} orders.
+                {% else %}
+                    You haven't placed any orders yet.
+                {% endif %}
+                <a href="{% url 'products:all-products' %}" class="alert-link">Start shopping now!</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<!-- /ORDERS TAB -->
                         <!-- /ORDERS TAB -->
                         
                         <!-- WISHLIST TAB -->
-                        <div class="tab-pane" id="wishlist">
-                            <div class="profile-section">
-                                <h3 class="profile-section-title">
-                                    <i class="fa fa-heart"></i> My Wishlist
+<!-- WISHLIST TAB -->
+<div class="tab-pane" id="wishlist">
+    <div class="profile-section">
+        <h3 class="profile-section-title">
+            <i class="fa fa-heart"></i> My Wishlist
+        </h3>
+        
+        <div id="wishlist-container">
+            {% if wishlist_items %}
+                <div class="row">
+                    {% for item in wishlist_items %}
+                    <div class="col-md-4 col-sm-6" id="wishlist-item-{{ item.id }}">
+                        <div class="product-wishlist">
+                            <div class="product-img">
+                                <a href="{% url 'products:product-detail' item.product.slug %}">
+                                    {% with item.product.images.first as main_image %}
+                                        {% if main_image %}
+                                            <img src="{{ main_image.image.url }}" alt="{{ item.product.name }}">
+                                        {% else %}
+                                            <img src="{% static 'img/no-image.jpg' %}" alt="No image available">
+                                        {% endif %}
+                                    {% endwith %}
+                                </a>
+                            </div>
+                            <div class="product-body">
+                                <h3 class="product-name">
+                                    <a href="{% url 'products:product-detail' item.product.slug %}">{{ item.product.name }}</a>
                                 </h3>
-                                
-                                {% if wishlist_items %}
-                                    <div class="row">
-                                        {% for item in wishlist_items %}
-                                        <div class="col-md-4 col-sm-6">
-                                            <div class="product-wishlist">
-                                                <div class="product-img">
-                                                    <a href="{% url 'products:product-detail' item.product.slug %}">
-                                                        {% with item.product.images.first as main_image %}
-                                                            {% if main_image %}
-                                                                <img src="{{ main_image.image.url }}" alt="{{ item.product.name }}">
-                                                            {% else %}
-                                                                <img src="{% static 'img/no-image.jpg' %}" alt="No image available">
-                                                            {% endif %}
-                                                        {% endwith %}
-                                                    </a>
-                                                </div>
-                                                <div class="product-body">
-                                                    <h3 class="product-name">
-                                                        <a href="{% url 'products:product-detail' item.product.slug %}">{{ item.product.name }}</a>
-                                                    </h3>
-                                                    <h4 class="product-price">
-                                                        GHS {{ item.product.discount_price|default:item.product.price }}
-                                                        {% if item.product.discount_price %}
-                                                            <del class="product-old-price">GHS {{ item.product.price }}</del>
-                                                        {% endif %}
-                                                    </h4>
-                                                </div>
-                                                <div class="wishlist-actions">
-                                                    <button class="btn btn-primary btn-sm add-to-cart-btn" 
-                                                            onclick="addToCart({{ item.product.id }}, 1)">
-                                                        <i class="fa fa-shopping-cart"></i> Add to Cart
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm remove-wishlist-btn" 
-                                                            onclick="removeFromWishlist({{ item.id }})">
-                                                        <i class="fa fa-trash"></i> Remove
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    <div class="alert alert-info">
-                                        Your wishlist is empty.
-                                        <a href="{% url 'products:all-products' %}" class="alert-link">Browse our products</a> to add items to your wishlist.
-                                    </div>
-                                {% endif %}
+                                <h4 class="product-price">
+                                    GHS {{ item.product.discount_price|default:item.product.price }}
+                                    {% if item.product.discount_price %}
+                                        <del class="product-old-price">GHS {{ item.product.price }}</del>
+                                    {% endif %}
+                                </h4>
+                            </div>
+                            <div class="wishlist-actions">
+                                <button class="btn btn-primary btn-sm add-to-cart-btn" 
+                                        onclick="addToCart({{ item.product.id }}, 1)">
+                                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                                </button>
+                                <button class="btn btn-danger btn-sm remove-wishlist-btn" 
+                                        data-wishlist-id="{{ item.id }}"
+                                        data-product-id="{{ item.product.id }}"
+                                        data-toggle="modal"
+                                        data-target="#deleteWishlistModal">
+                                    <i class="fa fa-trash"></i> Remove
+                                </button>
                             </div>
                         </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    Your wishlist is empty.
+                    <a href="{% url 'products:all-products' %}" class="alert-link">Browse our products</a> to add items to your wishlist.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Wishlist Delete Confirmation Modal -->
+<div class="modal fade" id="deleteWishlistModal" tabindex="-1" role="dialog" aria-labelledby="deleteWishlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteWishlistModalLabel">Confirm Removal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this item from your wishlist?
+            </div>
+            <div style="display: flex; justify-content: flex-end;" class="modal-footer d-flex flex-row">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form id="deleteWishlistForm" style="margin-left: 5px;" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+/* Wishlist Item Styles */
+.product-wishlist {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    background: #fff;
+}
+
+.product-wishlist:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+}
+
+.product-wishlist .product-img {
+    height: 180px;
+    margin-bottom: 15px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.product-wishlist .product-img img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.product-wishlist:hover .product-img img {
+    transform: scale(1.05);
+}
+
+.product-wishlist .product-name {
+    font-size: 16px;
+    margin-bottom: 5px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.product-wishlist .product-price {
+    font-size: 18px;
+    color: #D10024;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.product-wishlist .product-old-price {
+    font-size: 14px;
+    color: #999;
+    margin-left: 5px;
+}
+
+.wishlist-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.wishlist-actions .btn {
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+/* Modal Styles */
+.modal-header {
+    border-bottom: 1px solid #eee;
+    padding: 15px 20px;
+}
+
+.modal-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+    font-size: 16px;
+}
+
+.modal-footer {
+    border-top: 1px solid #eee;
+    padding: 15px 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .product-wishlist {
+        margin-bottom: 15px;
+    }
+    
+    .wishlist-actions {
+        flex-direction: column;
+    }
+    
+    .wishlist-actions .btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+</style>
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationModalBody">
+                <!-- Message will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /WISHLIST TAB -->
+<!-- /WISHLIST TAB -->
                         <!-- /WISHLIST TAB -->
                     </div>
                 </div>
@@ -746,30 +957,140 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 <!-- /SECTION -->
 
-
 <script>
-
+    // Wishlist Delete Modal Handling
 document.addEventListener('DOMContentLoaded', function() {
-    const closeButtons = document.querySelectorAll('.close-btn');
-    
-    closeButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const alert = this.closest('.custom-alert');
-            if (alert) {
-                // Add fade-out class
-                alert.style.transition = 'opacity 0.3s ease';
-                alert.style.opacity = '0';
-                
-                // Remove after animation completes
-                setTimeout(() => {
-                    alert.remove();
-                }, 300);
+    // Set up the modal when it's about to be shown
+    $('#deleteWishlistModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const wishlistId = button.data('wishlist-id');
+        const productId = button.data('product-id');
+        const form = $('#deleteWishlistForm');
+        
+        // Store the IDs on the form for later use
+        form.data('wishlist-id', wishlistId);
+        form.data('product-id', productId);
+    });
+
+    // Handle form submission via AJAX
+    $('#deleteWishlistForm').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const wishlistId = form.data('wishlist-id');
+        const productId = form.data('product-id');
+        
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
+        }
+
+        // Make the DELETE request
+        fetch(`/products/api/wishlist/${productId}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            console.log(response)
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response
+        })
+        .then(data => {
+            // Close the modal
+            $('#deleteWishlistModal').modal('hide');
+            
+            // Remove the item from the DOM
+            const itemElement = document.getElementById(`wishlist-item-${wishlistId}`);
+            if (itemElement) {
+                itemElement.remove();
+            }
+            
+            // Show success message
+            showAlert('success', data.detail || 'Product removed from wishlist!');
+            
+            // Update wishlist count in navbar
+            updateWishlistCount();
+            
+            // If wishlist is now empty, show empty message
+            if (document.querySelectorAll('.product-wishlist').length === 0) {
+                document.getElementById('wishlist-container').innerHTML = `
+                    <div class="alert alert-info">
+                        Your wishlist is empty.
+                        <a href="{% url 'products:all-products' %}" class="alert-link">
+                            Browse our products
+                        </a> to add items to your wishlist.
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('error', 'Failed to remove from wishlist: ' + error.message);
         });
     });
+
+    // Function to update wishlist count in navbar
+    function updateWishlistCount() {
+        fetch('/products/api/wishlist/')
+            .then(response => response.json())
+            .then(data => {
+                const wishlistCount = document.getElementById('wishlist-count');
+                if (wishlistCount) {
+                    wishlistCount.textContent = data.length;
+                }
+            });
+    }
+
+    // Function to show alerts
+    function showAlert(type, message) {
+        const alertClass = type === 'success' ? 'alert-green' : 'alert-red';
+        const alertHtml = `
+            <div class="alert ${alertClass} custom-alert" role="alert">
+                <svg style="height:30px;width:30px" class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div style="margin-left:5px" class="ms-3 font-medium">
+                    ${message}
+                </div>
+                <button type="button" class="close-btn" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>
+            </div>
+        `;
+        
+        // Prepend alert to messages container
+        $('.tab-content').prepend(alertHtml);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            $(`.alert.${alertClass}`).fadeOut(300, function() {
+                $(this).remove();
+                window.location.reload();
+            });
+        }, 2000);
+    }
 });
     </script>
-
  <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Delete Address Modal Handling
@@ -951,20 +1272,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
   
     // Function to add item to cart
-    function addToCart(productId, quantity) {
-        // Your add to cart implementation
-        console.log(`Adding product ${productId} to cart with quantity ${quantity}`);
-    }
+ 
     
     // Function to remove item from wishlist
-    function removeFromWishlist(itemId) {
-        // Your remove from wishlist implementation
-        console.log(`Removing wishlist item ${itemId}`);
-    }
     
-    // Make functions available globally
-    window.addToCart = addToCart;
-    window.removeFromWishlist = removeFromWishlist;
     
     // Handle URL hash for direct tab access
     if (window.location.hash) {
@@ -984,6 +1295,151 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+</script>
+
+<script>
+// Function to add item to wishlist (can be used from product pages)
+function addToWishlist(productId) {
+    fetch(`/api/wishlist/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Show success message
+        showAlert('success', data.detail || 'Product added to wishlist!');
+        
+        // Update wishlist count in navbar if element exists
+        const wishlistCount = document.getElementById('wishlist-count');
+        if (wishlistCount) {
+            fetch('/api/wishlist/')
+                .then(res => res.json())
+                .then(wishlistData => {
+                    wishlistCount.textContent = wishlistData.length;
+                });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('error', 'Failed to add to wishlist: ' + error.message);
+    });
+}
+
+// Function to remove item from wishlist
+function removeFromWishlist(wishlistItemId, productId) {
+    if (!confirm('Are you sure you want to remove this item from your wishlist?')) {
+        return;
+    }
+
+    fetch(`/products/api/wishlist/${productId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.log(response)
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Remove the item from the DOM
+        const itemElement = document.getElementById(`wishlist-item-${wishlistItemId}`);
+        if (itemElement) {
+            itemElement.remove();
+        }
+        
+        // Show success message
+        showAlert('success', data.detail || 'Product removed from wishlist!');
+        
+        // Update wishlist count in navbar if element exists
+        const wishlistCount = document.getElementById('wishlist-count');
+        if (wishlistCount) {
+            fetch('/api/wishlist/')
+                .then(res => res.json())
+                .then(wishlistData => {
+                    wishlistCount.textContent = wishlistData.length;
+                    
+                    // If wishlist is now empty, show empty message
+                    if (wishlistData.length === 0) {
+                        document.getElementById('wishlist-container').innerHTML = `
+                            <div class="alert alert-info">
+                                Your wishlist is empty.
+                                <a href="{% url 'products:all-products' %}" class="alert-link">
+                                    Browse our products
+                                </a> to add items to your wishlist.
+                            </div>
+                        `;
+                    }
+                });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('error', 'Failed to remove from wishlist: ' + error.message);
+    });
+}
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Function to show alerts (you can customize this based on your existing alert system)
+function showAlert(type, message) {
+    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+    const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
+    
+    // Prepend alert to messages container or create one if it doesn't exist
+    let messagesContainer = document.getElementById('messages-container');
+    if (!messagesContainer) {
+        messagesContainer = document.createElement('div');
+        messagesContainer.id = 'messages-container';
+        document.body.prepend(messagesContainer);
+    }
+    
+    messagesContainer.insertAdjacentHTML('afterbegin', alertHtml);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+}
 </script>
 
 <style>
@@ -1180,7 +1636,40 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 
+<script>
+function addToCart(productId, quantity) {
+    fetch('/cart/add/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        if (data.success) {
+            // Update cart count in navbar
+            document.getElementById('cart-count').textContent = data.cart_count;
+            
+            // Show success message
+            alert('Product added to cart successfully!');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding to cart');
+    });
+}
 
+
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Get elements
@@ -1253,6 +1742,115 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 </script>
 
+<style>
+    /* Orders Filter Dropdown */
+.dropdown-toggle2 {
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dropdown-toggle2 i {
+    margin-right: 8px;
+}
+
+.dropdown-menu2 {
+    border: none;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 5px 0;
+}
+
+.dropdown-item2 {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-item2 i {
+    margin-right: 8px;
+    width: 18px;
+    text-align: center;
+}
+
+.dropdown-item2.active, 
+.dropdown-item2:active {
+    background-color: #f8f9fa;
+    color: #D10024;
+}
+
+/* Orders Table */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    border-top: none;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    padding: 12px 15px;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-top: 1px solid #f1f1f1;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.badge {
+    padding: 6px 10px;
+    font-weight: 500;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.badge-info {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.badge-success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.badge-primary {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.badge-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.badge-secondary {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+.btn-outline-primary {
+    border-color: #D10024;
+    color: #D10024;
+}
+
+.btn-outline-primary:hover {
+    background-color: #D10024;
+    color: white;
+}
+</style>
 {% endblock %}
 
 

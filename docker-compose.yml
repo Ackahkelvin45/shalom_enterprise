@@ -2,11 +2,62 @@ version: '3.8'
 
 services:
   web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      bash -c "python manage.py collectstatic --noinput &&
+               python manage.py migrate &&
+               gunicorn --bind 0.0.0.0:8080 --workers 4 --threads 2 --timeout 120 shalom_enterprise.wsgi:application"
     volumes:
-      - .:/code
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
     ports:
-      - "8000:8000"
+      - "8080:8080"
+    env_file:
+      - .env
     environment:
-      - DEBUG=1
+      - EMAIL=${EMAIL}
+      - EMAIL_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - DB_NAME=shalom_afric
+      - DB_USER=kelvin
+      - DB_PASSWORD=kelvin
+      - DB_HOST=db
+      - DB_PORT=5432
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65535
+      - net.ipv4.tcp_fin_timeout=30
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      app-network:
+        aliases:
+          - web
+
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=shalom_afric
+      - POSTGRES_USER=kelvin
+      - POSTGRES_PASSWORD=kelvin
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kelvin -d shalom_afric"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+
+networks:
+  app-network:
+    driver: bridge

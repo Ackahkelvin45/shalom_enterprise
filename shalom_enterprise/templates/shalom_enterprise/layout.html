@@ -9,7 +9,7 @@
 
 		<title>
 
-            {% block title %}Shalom Enterprise{% endblock %}
+            {% block title %}SA Express{% endblock %}
         </title>
 		<!-- In your layout.html, make sure these are included -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -77,10 +77,14 @@
 									<div class="account-item">
 										<a href="{% url 'auth:profile' %}"><i class="fa fa-user"></i> Profile</a>
 									</div>
-									
-									<div class="account-item">
+
+									<!--
+										<div class="account-item">
 										<a href="#"><i class="fa fa-cog"></i> Settings</a>
 									</div>
+									-->
+									
+								
 									<div class="account-item">
 										<a  href="{% url 'auth:logout' %}" ><i class="fa fa-sign-out"></i> Logout</a>
 									</div>
@@ -107,10 +111,10 @@
 								<a href="{% url 'main:index'%}" class="logo">
 									<h2 style="color: white;">
 										<span style="color: #D10024;">
-											Shalom
+											SA 
 										</span>
 										
-										 Afric Enterprise</h2>
+										  Express</h2>
 								</a>
 							</div>
 						</div>
@@ -152,7 +156,8 @@
             <div class="empty-wishlist">Your wishlist is empty</div>
         </div>
         <div class="cart-btns">
-            <a >View Wishlist</a>
+            <a href="{% url 'auth:profile' %}"
+			 >View Wishlist</a>
         </div>
     </div>
 </div>
@@ -177,7 +182,7 @@
         </div>
         <div class="cart-btns">
             <a href="{% url 'cart:cartproducts' %}">View Cart</a>
-            <a  >Checkout <i class="fa fa-arrow-circle-right"></i></a>
+            <a   href="{% url 'cart:cartproducts' %}" >Checkout <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>
@@ -242,7 +247,7 @@
 						<div class="col-md-3 col-xs-6">
 							<div class="footer">
 								<h3 class="footer-title">About Us</h3>
-								<p>Shalom Afrin Enterprise</p>
+								<p>SA Express</p>
 								<ul class="footer-links">
 									<li><a ><i class="fa fa-map-marker"></i>1734 Ghana Road</a></li>
 									<li><a ><i class="fa fa-phone"></i>+233552180200</a></li>
@@ -309,7 +314,7 @@
 							</ul>
 							<span class="copyright">
 								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | shalom afric enterprise
+								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | SA Express
 							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 							</span>
 						</div>
