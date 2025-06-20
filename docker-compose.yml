@@ -6,9 +6,10 @@ services:
       context: .
       dockerfile: Dockerfile
     command: >
-      bash -c "python manage.py collectstatic --noinput &&
-               python manage.py migrate &&
-               gunicorn --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120 shalom_enterprise.wsgi:application"
+      bash -c "./wait-for-db.sh &&
+              python manage.py collectstatic --noinput &&
+              python manage.py migrate &&
+              gunicorn --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120 shalom_enterprise.wsgi:application"
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
@@ -32,10 +33,12 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
+
     networks:
       app-network:
         aliases:
           - web
+          - webserver  # Add additional aliases if needed
 
   db:
     image: postgres:15
