@@ -391,7 +391,7 @@ def get_password_reset_email_template(reset_link=None, custom_message=None):
                     This password reset link will expire in 24 hours for your security. If you need assistance, please contact our support team.
                 </div>
                 
-                {f'<div class="message" style="margin-top: 20px; font-size: 14px; color: #666;">If you\'re having trouble clicking the password reset button, copy and paste the URL below into your web browser:<br><span style="color: #D10024; word-break: break-all;">{reset_link}</span></div>' if reset_link else ''}
+                {f'<div class="message" style="margin-top: 20px; font-size: 14px; color: #666;">copy and paste the URL below into your web browser if you havw trouble :<br><span style="color: #D10024; word-break: break-all;">{reset_link}</span></div>' if reset_link else ''}
             </div>
             
             <div class="footer">
