@@ -17,11 +17,11 @@ services:
     env_file:
       - .env
     environment:
-      - DB_HOST=db  # This should match the db service name
+      - DB_HOST=db
     depends_on:
       - db
     networks:
-      - app-network
+      - app-network  # This was missing or misconfigured
 
   db:
     image: postgres:15
