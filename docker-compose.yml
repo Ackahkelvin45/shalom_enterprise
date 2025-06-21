@@ -16,12 +16,9 @@ services:
     env_file:
       - .env
     environment:
-      - EMAIL_HOST=${EMAIL_HOST}
-      - EMAIL_PORT=${EMAIL_PORT}
-      - EMAIL_USE_TLS=${EMAIL_USE_TLS:-True}
-      - EMAIL_USE_SSL=${EMAIL_USE_SSL:-False}
       - EMAIL=${EMAIL}
       - EMAIL_PASSWORD=${EMAIL_HOST_PASSWORD}
+
 
     sysctls:
       - net.ipv4.ip_local_port_range=1024 65535
