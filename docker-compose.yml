@@ -17,7 +17,7 @@ services:
       - .env
     environment:
       - EMAIL=${EMAIL}
-      - EMAIL_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
 
 
     sysctls:
