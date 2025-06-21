@@ -405,14 +405,19 @@ def get_password_reset_email_template(reset_link=None, custom_message=None):
     """
 
 def send_otp_email(email, otp):
-    subject = "Your OTP for Email Verification"
-    text_content = f"Your OTP for email verification is: {otp}"
-    html_content = get_otp_email_template(otp)
-    
-    # Create email message
-    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    try:
+        subject = "Your OTP for Email Verification"
+        text_content = f"Your OTP for email verification is: {otp}"
+        html_content = get_otp_email_template(otp)
+        
+        # Create email message
+        msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+    except Exception as e:
+        print(f"Error sending OTP email: {str(e)}")
+        # You might want to raise the exception again or handle it differently
+        raise  # This re-raises the caught exception
 
 def create_otp_for_user(user):
     otp_code = generate_otp()
