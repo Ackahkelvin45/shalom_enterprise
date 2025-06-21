@@ -4,7 +4,7 @@ services:
   web:
     build: .
     command: >
-      bash -c "./wait-for-db.sh &&
+      bash -c "./wait-for-db.sh db &&
               python manage.py collectstatic --noinput &&
               python manage.py migrate &&
               gunicorn --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120 shalom_enterprise.wsgi:application"
@@ -17,11 +17,15 @@ services:
     env_file:
       - .env
     environment:
+      - DB_NAME=shalom_afric
+      - DB_USER=kelvin
+      - DB_PASSWORD=kelvin
       - DB_HOST=db
+      - DB_PORT=5432
     depends_on:
       - db
     networks:
-      - app-network  # This was missing or misconfigured
+      - app-network
 
   db:
     image: postgres:15
