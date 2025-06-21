@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     command: >
       bash -c "./wait-for-db.sh &&
               python manage.py collectstatic --noinput &&
@@ -19,43 +17,20 @@ services:
     env_file:
       - .env
     environment:
-      - EMAIL=${EMAIL}
-      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
-      - DB_NAME=shalom_afric
-      - DB_USER=kelvin
-      - DB_PASSWORD=kelvin
-      - DB_HOST=db
-      - DB_PORT=5432
-    sysctls:
-      - net.ipv4.ip_local_port_range=1024 65535
-      - net.ipv4.tcp_fin_timeout=30
+      - DB_HOST=db  # This should match the db service name
     depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
-
+      - db
     networks:
-      app-network:
-        aliases:
-          - web
-          - webserver  # Add additional aliases if needed
+      - app-network
 
   db:
     image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-    - POSTGRES_DB=shalom_afric  # This creates the default database
-    - POSTGRES_USER=kelvin      # This creates the specified user
-    - POSTGRES_PASSWORD=kelvin  # This sets the password for the user
-    # These are for your Django app to connect (optional here, as they're in web)
-    - DB_NAME=shalom_afric
-    - DB_USER=kelvin
-    - DB_PASSWORD=kelvin
-    - DB_HOST=db
-    - DB_PORT=5432
-
-
+      - POSTGRES_DB=shalom_afric
+      - POSTGRES_USER=kelvin
+      - POSTGRES_PASSWORD=kelvin
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U kelvin -d shalom_afric"]
       interval: 5s
