@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-06sxf-rs^o_kplj1k-m@2ji%9f#8d45*usxhxdnl3s4%1di@2q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['165.227.85.34','localhost','127.0.0.1','www.google.com','wwww.saexpress.shop','saexpress.shop']
+ALLOWED_HOSTS = ['165.227.85.34','localhost','127.0.0.1','www.google.com','www.saexpress.shop','www.saexpress.shop','saexpress.shop']
 
 
 # Applicatio  "http://165.227.85.34",
