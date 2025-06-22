@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'cart',
-    'checkout'
+    'checkout',
+    'settings',
   
 ]
 
@@ -83,10 +84,8 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-
-
-                
+                'shalom_enterprise.context_processors.global_data',
+                'django.contrib.messages.context_processors.messages',               
             ],
         },
     },
@@ -188,7 +187,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://165.227.85.34",
      'https://www.google.com',
         'https://saexpress.shop',
-         "http://www.saexpress.store/"
+         "http://www.saexpress.store",
     ]
 
 CORS_ALLOW_CREDENTIALS = True  # To allow cookies
