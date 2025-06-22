@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-06sxf-rs^o_kplj1k-m@2ji%9f#8d45*usxhxdnl3s4%1di@2q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['165.227.85.34','localhost','127.0.0.1','www.google.com','www.saexpress.shop','www.saexpress.shop','saexpress.shop']
+ALLOWED_HOSTS = ['165.227.85.34','localhost','127.0.0.1','www.google.com','www.saexpress.shop','www.saexpress.shop','saexpress.shop','www.saexpress.store']
 
 
 # Applicatio  "http://165.227.85.34",
@@ -187,7 +187,8 @@ CORS_ALLOWED_ORIGINS = [
       "http://165.227.85.34",
     "https://165.227.85.34",
      'https://www.google.com',
-        'https://saexpress.shop'
+        'https://saexpress.shop',
+         "http://www.saexpress.store/"
     ]
 
 CORS_ALLOW_CREDENTIALS = True  # To allow cookies
@@ -203,7 +204,8 @@ CSRF_TRUSTED_ORIGINS = [
       "http://165.227.85.34",
     "https://165.227.85.34",
     'https://www.google.com'
-    'https://saexpress.shop'
+    'https://saexpress.shop',
+    "http://www.saexpress.store/"
     
 
 ]
