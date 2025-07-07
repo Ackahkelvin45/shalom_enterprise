@@ -6,7 +6,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from authentication.models import CustomUser
 from django.utils import timezone
-from products.models import Product
+from products.models import Product,TopSeller
 from authentication.models import ShippingAddress
 
 class Order(models.Model):
@@ -111,3 +111,31 @@ class OrderItem(models.Model):
         if self.discount_price:
             return self.discount_price * self.quantity
         return self.price * self.quantity
+        
+    def save(self, *args, **kwargs):
+        created = not self.pk  # Check if this is a new item being created
+        super().save(*args, **kwargs)
+        
+        if created:
+            # Update the top seller count when a new order item is created
+            self.update_top_seller()
+
+    def update_top_seller(self):
+        """Update the top seller count for this product"""
+        # Get or create a TopSeller record for this product
+        top_seller, created = TopSeller.objects.get_or_create(
+            product=self.product,
+            defaults={'sales_count': 0}
+        )
+        
+        # Increment the sales count
+        top_seller.sales_count += self.quantity
+        top_seller.save()
+    
+
+
+
+
+
+
+

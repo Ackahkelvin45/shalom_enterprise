@@ -1,39 +1,66 @@
+version: '3.8'
+
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: >
-      bash -c "python manage.py collectstatic --noinput &&
-              python manage.py migrate &&
-              gunicorn --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120 shalom_enterprise.wsgi:application"
+  nginx:
+    image: nginx:1.27-alpine
+    restart: always
     volumes:
-      - .:/app
-      - static_volume:/app/staticfiles
-      - media_volume:/app/mediafiles
+      - ./static:/code/static
+      - ./media:/code/media
+      - ./nginx:/etc/nginx/conf.d  # Removed trailing slash
     ports:
-      - "8000:8000"
-    env_file:
-      - .env
+      - '8000:80'
+    depends_on:
+      - web
+
+  web:
+    build: .
+    restart: always
+    command: ["python", "-m", "uvicorn", "shalom_enterprise.asgi:application", "--host", "0.0.0.0", "--port", "8000", "--workers", "2", "--log-level", "info"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./static:/code/static
+      - ./media:/code/media
+    env_file: ./.env
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     environment:
-      - EMAIL=${EMAIL}
-      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      POSTGRES_DB: shalom_afric  # Changed to match your Django settings
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      PGDATA: /var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-
-    sysctls:
-      - net.ipv4.ip_local_port_range=1024 65535
-      - net.ipv4.tcp_fin_timeout=30
-    restart: unless-stopped
-    networks:
-      app-network:
-        aliases:
-          - web
+  migration:
+    build: .
+    env_file: ./.env
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py seed_db"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./static:/code/static
+      - ./media:/code/media
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
-  static_volume:
-  media_volume:
-
-networks:
-  app-network:
-    driver: bridge
-    name: shalom_network
+  postgres_data:

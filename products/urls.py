@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import products,product_detail,wishlist_api,cart_api,submit_review,categories_json
+from .views import products,product_detail,wishlist_api,cart_api,submit_review,categories_json,show_hotdeals,top_sellers
 
 
 app_name="products"
@@ -18,6 +18,9 @@ urlpatterns=[
 
     path('api/review/submit/<int:product_id>/', submit_review, name='submit_review'),
     path('api/categories/', categories_json, name='categories-json'),
+    path('hot-deals/', show_hotdeals, name='hot-deals'),
+    path('top-selling/', top_sellers, name='top-selling'),
+
 
 
 

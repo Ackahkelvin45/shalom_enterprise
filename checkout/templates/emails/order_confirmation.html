@@ -1,48 +1,294 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background-color: #D10024; color: white; padding: 15px; text-align: center; }
-        .content { padding: 20px; background-color: #f9f9f9; }
-        .order-info { background: white; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
-        .order-items { width: 100%; border-collapse: collapse; }
-        .order-items th, .order-items td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-        .total-row { font-weight: bold; }
-        .footer { margin-top: 20px; text-align: center; font-size: 12px; color: #777; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container { 
+            max-width: 650px; 
+            margin: 0 auto; 
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #D10024 0%, #e63946 100%);
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content { 
+            padding: 40px 30px; 
+            background: #ffffff;
+        }
+        
+        .greeting {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .thank-you {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .order-info { 
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4f8 100%);
+            padding: 25px; 
+            margin-bottom: 30px; 
+            border-radius: 15px;
+            border-left: 5px solid #D10024;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .order-info h3 {
+            color: #D10024;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #D10024;
+            padding-bottom: 10px;
+        }
+        
+        .order-info p {
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .order-info strong {
+            color: #D10024;
+            font-weight: 600;
+        }
+        
+        .shipping-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #ddd;
+        }
+        
+        .shipping-section h4 {
+            color: #D10024;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .address-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .order-summary-header {
+            color: #D10024;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #D10024;
+        }
+        
+        .order-items { 
+            width: 100%; 
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .order-items th { 
+            background: linear-gradient(135deg, #D10024 0%, #e63946 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .order-items td { 
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+        }
+        
+        .order-items tbody tr:hover {
+            background: #f8f9ff;
+            transition: background 0.3s ease;
+        }
+        
+        .order-items tfoot tr {
+            background: #f8f9ff;
+        }
+        
+        .order-items tfoot td {
+            border-bottom: none;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .total-row td {
+            background: linear-gradient(135deg, #D10024 0%, #e63946 100%) !important;
+            color: white !important;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffeaa7 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #D10024;
+        }
+        
+        .info-section p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .footer { 
+            margin-top: 30px; 
+            text-align: center; 
+            padding: 25px;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+        }
+        
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #D10024 0%, #e63946 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .order-items th,
+            .order-items td {
+                padding: 10px 8px;
+                font-size: 0.9em;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Order Confirmation</h1>
-            <p>Your order #{{ order.order_number }} has been received</p>
+            <h1>🎉 Order Confirmed!</h1>
+            <p>Your order <span class="highlight">#{{ order.order_number }}</span> has been received</p>
         </div>
         
         <div class="content">
-            <p>Hello {{ order.user.first_name }},</p>
-            <p>Thank you for your order! We're getting it ready to be shipped.</p>
+            <p class="greeting">Hello {{ order.user.first_name }}! 👋</p>
+            <p class="thank-you">Thank you for your order! We're getting it ready to be shipped with care.</p>
             
             <div class="order-info">
-                <h3>Order Details</h3>
-                <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+                <h3>📋 Order Details</h3>
+                <p><strong>Order Number:</strong> {{ order.order_number }} <span class="status-badge">Processing</span></p>
                 <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y" }}</p>
-                <p><strong>Payment Method:</strong> Cash on Delivery</p>
+                <p><strong>Payment Method:</strong> Cash on Delivery 💰</p>
                 
-                <h4>Shipping Address</h4>
-                <p>
-                    {{ order.shipping_address.full_name }}<br>
-                    {{ order.shipping_address.address_line_1 }}<br>
-                    {% if order.shipping_address.address_line_2 %}
-                        {{ order.shipping_address.address_line_2 }}<br>
-                    {% endif %}
-                    {{ order.shipping_address.city }}, {{ order.shipping_address.region }}<br>
-                    Phone: {{ order.shipping_address.phone }}
-                </p>
+                <div class="shipping-section">
+                    <h4>🚚 Shipping Address</h4>
+                    <div class="address-box">
+                        <p>
+                            <strong>{{ order.shipping_address.full_name }}</strong><br>
+                            {{ order.shipping_address.address_line_1 }}<br>
+                            {% if order.shipping_address.address_line_2 %}
+                                {{ order.shipping_address.address_line_2 }}<br>
+                            {% endif %}
+                            {{ order.shipping_address.city }}, {{ order.shipping_address.region }}<br>
+                            📞 Phone: {{ order.shipping_address.phone }}
+                        </p>
+                    </div>
+                </div>
             </div>
             
-            <h3>Order Summary</h3>
+            <h3 class="order-summary-header">📦 Order Summary</h3>
             <table class="order-items">
                 <thead>
                     <tr>
@@ -54,9 +300,9 @@
                 <tbody>
                     {% for item in items %}
                     <tr>
-                        <td>{{ item.product.name }}</td>
+                        <td><strong>{{ item.product.name }}</strong></td>
                         <td>{{ item.quantity }}</td>
-                        <td>GHS {{ item.total_price }}</td>
+                        <td><strong>GHS {{ item.total_price }}</strong></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -70,18 +316,20 @@
                         <td>-GHS {{ order.discount_amount }}</td>
                     </tr>
                     <tr class="total-row">
-                        <td colspan="2">Total:</td>
+                        <td colspan="2">💰 Total:</td>
                         <td>GHS {{ order.total_amount }}</td>
                     </tr>
                 </tfoot>
             </table>
             
-            <p>You can track your order status by logging into your account.</p>
-            <p>If you have any questions, please contact our customer service.</p>
+            <div class="info-section">
+                <p>🔍 <strong>Track your order:</strong> Log into your account to track your order status in real-time.</p>
+                <p>❓ <strong>Need help?</strong> Contact our friendly customer service team - we're here to help!</p>
+            </div>
         </div>
         
         <div class="footer">
-            <p>© {% now "Y" %} SA Express. All rights reserved.</p>
+            <p>© {% now "Y" %} SA Express. All rights reserved. | Made with ❤️ for our customers</p>
         </div>
     </div>
 </body>

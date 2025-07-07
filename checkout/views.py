@@ -15,6 +15,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from .forms import OrderCancellationForm
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.template.exceptions import TemplateDoesNotExist
 
 def confirm_order(request):
    
@@ -67,9 +71,6 @@ def confirm_order(request):
 
 
 
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
@@ -108,33 +109,40 @@ def order_confirmation(request, order_id):
 
 from smtplib import SMTPException
 from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+
 
 def send_order_confirmation_email(order):
+    print("Attempting to send email...")  # Debug
+    print(f"Recipient: {order.user.email}")  # Debug
+    
     subject = f"Order Confirmation - #{order.order_number}"
-    html_message = render_to_string('emails/order_confirmation.html', {
+    context = {
         'order': order,
         'items': order.items.all()
-    })
+    }
+    
+    try:
+        html_message = render_to_string('emails/order_confirmation.html', context)
+        print("Template rendered successfully")  # Debug
+    except TemplateDoesNotExist:
+        print("Error: Template not found")  # Debug
+        return
+    
     plain_message = strip_tags(html_message)
     
     try:
-        email = EmailMessage(
+        email = EmailMultiAlternatives(
             subject=subject,
             body=plain_message,
             from_email=settings.EMAIL_HOST_USER,
             to=[order.user.email],
         )
-        email.content_subtype = "html"  # Set content to HTML
+        email.attach_alternative(html_message, "text/html")
         email.send(fail_silently=False)
-        
+        print("Email sent successfully")  # Debug
     except SMTPException as e:
         print(f"Failed to send order confirmation email: {e}")
-        # You might want to implement retry logic or notification here
-
-
-
-
-
 
 @login_required
 def order_detail(request, order_id):

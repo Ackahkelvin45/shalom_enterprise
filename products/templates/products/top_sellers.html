@@ -1,0 +1,430 @@
+{% extends 'shalom_enterprise/layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Top Sellers - SA Express{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="">Home</a></li>
+                    <li><a href="#">Top Sellers</a></li>
+                    {% if search_query %}
+                    <li>Search: "{{ search_query }}"</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-3">
+                <!-- aside Widget -->
+                <div class="aside">
+
+                      <!-- Search -->
+                        <h3 class="aside-title" style="margin-top: 20px;">Search</h3>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" 
+                                   value="{{ search_query|default:'' }}" placeholder="Search products..."
+                                   onkeypress="if(event.keyCode == 13) this.form.submit()">
+                        </div>
+                        
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn primary-btn" style="width: 100%;">
+                                    <i class="fa fa-filter"></i> Filter
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{% url 'products:top-selling' %}" class="btn btn-default" style="width: 100%;">
+                                    <i class="fa fa-refresh"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    <h3 class="aside-title">Categories</h3>
+                    <form id="filter-form" method="get" action="{% url 'products:top-selling' %}">
+                        <div class="checkbox-filter">
+                            {% for category in categories %}
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="category-{{ category.id }}" 
+                                       name="category" value="{{ category.id }}"
+                                       {% if category.id in selected_categories %}checked{% endif %}
+                                       onchange="this.form.submit()">
+                                <label for="category-{{ category.id }}">
+                                    <span></span>
+                                    {{ category.name }}
+                                    <small>({{ category.products.count }})</small>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Brand filter -->
+                        <h3 class="aside-title" style="margin-top: 20px;">Brands</h3>
+                        <div class="checkbox-filter">
+                            {% for brand in brands %}
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="brand-{{ brand.id }}" 
+                                       name="brand" value="{{ brand.id }}"
+                                       {% if brand.id in selected_brands %}checked{% endif %}
+                                       onchange="this.form.submit()">
+                                <label for="brand-{{ brand.id }}">
+                                    <span></span>
+                                    {{ brand.name }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Price filter -->
+                        <h3 class="aside-title" style="margin-top: 20px;">Price Range</h3>
+                        <div class="price-filter">
+                            <div id="price-slider"></div>
+                            <div class="input-number price-min">
+                                <input id="price-min" name="price_min" type="number" 
+                                       value="{{ price_min|default:'' }}" placeholder="Min"
+                                       onchange="this.form.submit()">
+                                <span class="qty-up">+</span>
+                                <span class="qty-down">-</span>
+                            </div>
+                            <span>-</span>
+                            <div class="input-number price-max">
+                                <input id="price-max" name="price_max" type="number" 
+                                       value="{{ price_max|default:'' }}" placeholder="Max"
+                                       onchange="this.form.submit()">
+                                <span class="qty-up">+</span>
+                                <span class="qty-down">-</span>
+                            </div>
+                        </div>
+                        
+                      
+                    </form>
+                </div>
+                <!-- /aside Widget -->
+
+                <!-- aside Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Top Rated</h3>
+                    {% for product in top_rated_products|slice:":3" %}
+                    <div class="product-widget">
+                        <div class="product-img">
+                            {% with product.images.first as main_image %}
+                                {% if main_image %}
+                                    <img src="{{ main_image.image.url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="{% static 'img/no-image-available.jpg' %}" alt="No image available">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="product-body">
+                            <p class="product-category">{{ product.category.name }}</p>
+                            <h3 class="product-name"><a href="{% url 'products:product-detail' product.slug %}">{{ product.name }}</a></h3>
+                            <h4 class="product-price">GHS {{ product.discount_price|default:product.price }}
+                                {% if product.discount_price %}
+                                <del class="product-old-price">GHS {{ product.price }}</del>
+                                {% endif %}
+                            </h4>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- /aside Widget -->
+            </div>
+            <!-- /ASIDE -->
+
+            <!-- STORE -->
+            <div id="store" class="col-md-9">
+                <!-- store top filter -->
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <form id="sort-form" method="get" action="{% url 'products:top-selling' %}">
+                            <!-- Preserve existing filters -->
+                            {% for category in selected_categories %}
+                                <input type="hidden" name="category" value="{{ category }}">
+                            {% endfor %}
+                            {% for brand in selected_brands %}
+                                <input type="hidden" name="brand" value="{{ brand }}">
+                            {% endfor %}
+                            {% if price_min %}
+                                <input type="hidden" name="price_min" value="{{ price_min }}">
+                            {% endif %}
+                            {% if price_max %}
+                                <input type="hidden" name="price_max" value="{{ price_max }}">
+                            {% endif %}
+                            {% if search_query %}
+                                <input type="hidden" name="search" value="{{ search_query }}">
+                            {% endif %}
+                            
+                            <label>
+                                Sort By:
+                                <select class="input-select" name="sort" onchange="this.form.submit()">
+                                    <option value="popular" {% if request.GET.sort == 'popular' %}selected{% endif %}>Popular</option>
+                                    <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                                    <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                                    <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>Rating</option>
+                                </select>
+                            </label>
+                        </form>
+                    </div>
+                    <ul class="store-grid">
+                        <li class="active"><i class="fa fa-th"></i></li>
+                        <li><a href="#"><i class="fa fa-th-list"></i></a></li>
+                    </ul>
+                </div>
+                <!-- /store top filter -->
+
+                <!-- store products -->
+                <div class="row">
+                    {% if top_sellers %}
+                        {% for product in top_sellers %}
+                        <div class="col-md-4 col-xs-6">
+                            <div class="product">
+                                <div class="product-img" style="height: 300px!important;">
+                                    {% with product.images.first as main_image %}
+                                        {% if main_image %}
+                                            <img src="{{ main_image.image.url }}" alt="{{ product.name }}">
+                                        {% else %}
+                                            <img src="{% static 'img/no-image-available.jpg' %}" alt="No image available">
+                                        {% endif %}
+                                    {% endwith %}
+                                    
+                                    <div class="product-label">
+                                        {% if product.discount_price %}
+                                            {% widthratio product.discount_price product.price 100 as discount_percentage %}
+                                            <span class="sale">-{{ 100|subtract:discount_percentage }}%</span>
+                                        {% endif %}
+                                        <span class="new">TOP SELLER</span>
+                                    </div>
+                                </div>
+                                <div class="product-body">
+                                    <p class="product-category">{{ product.category.name }}</p>
+                                    <h3 class="product-name"><a href="{% url 'products:product-detail' product.slug %}">{{ product.name }}</a></h3>
+                                    <h4 class="product-price">
+                                        GHS {{ product.discount_price|default:product.price }}
+                                        {% if product.discount_price %}
+                                            <del class="product-old-price">GHS {{ product.price }}</del>
+                                        {% endif %}
+                                    </h4>
+                                    <div class="product-rating">
+                                        {% with product.average_rating as rating %}
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= rating %}
+                                                    <i class="fa fa-star"></i>
+                                                {% else %}
+                                                    <i class="fa fa-star-o"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="product-btns">
+                                        <button class="add-to-wishlist" onclick="addToWishlist({{ product.id }})">
+                                            <i class="fa fa-heart-o"></i>
+                                            <span class="tooltipp">add to wishlist</span>
+                                        </button>
+                                        <button class="quick-view">
+                                            <a href="{% url 'products:product-detail' product.slug %}">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <span class="tooltipp">quick view</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="add-to-cart">
+                                    <button class="add-to-cart-btn" onclick="addToCart({{ product.id }}, 1)">
+                                        <i class="fa fa-shopping-cart"></i> add to cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-md-12">
+                            <div class="alert alert-warning" style="margin-top: 20px;">
+                                <strong>No products found!</strong> Try adjusting your filters.
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- /store products -->
+
+                <!-- store bottom filter -->
+                <div class="store-filter clearfix">
+                    <span class="store-qty">Showing {{ top_sellers|length }} product{% if top_sellers|length != 1 %}s{% endif %}</span>
+                </div>
+                <!-- /store bottom filter -->
+            </div>
+            <!-- /STORE -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                    <form>
+                        <input class="input" type="email" placeholder="Enter Your Email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /NEWSLETTER -->
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/nouislider.min.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize price slider
+    const priceSlider = document.getElementById('price-slider');
+    const priceMin = document.getElementById('price-min');
+    const priceMax = document.getElementById('price-max');
+    const filterForm = document.getElementById('filter-form');
+    
+    if (priceSlider) {
+        // Get min and max prices from the products
+        const minPrice = 0;
+        const maxPrice = 1000; // You might want to calculate this dynamically
+        
+        noUiSlider.create(priceSlider, {
+            start: [
+                {% if price_min %}{{ price_min }}{% else %}0{% endif %}, 
+                {% if price_max %}{{ price_max }}{% else %}1000{% endif %}
+            ],
+            connect: true,
+            range: {
+                'min': minPrice,
+                'max': maxPrice
+            },
+            step: 10
+        });
+
+        priceSlider.noUiSlider.on('update', function(values, handle) {
+            const value = values[handle];
+            if (handle) {
+                priceMax.value = Math.round(value);
+            } else {
+                priceMin.value = Math.round(value);
+            }
+        });
+
+        priceSlider.noUiSlider.on('change', function() {
+            filterForm.submit();
+        });
+
+        priceMin.addEventListener('change', function() {
+            priceSlider.noUiSlider.set([this.value, null]);
+        });
+
+        priceMax.addEventListener('change', function() {
+            priceSlider.noUiSlider.set([null, this.value]);
+        });
+    }
+    
+    // Add to cart functionality
+    window.addToCart = function(productId, quantity) {
+        fetch('{% url "cart:add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: quantity
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                // Update cart count in header
+                document.getElementById('cart-count').textContent = data.cart_count;
+                // Show success message
+                alert('Product added to cart!');
+            } else {
+                alert(data.message || 'Error adding to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding to cart');
+        });
+    };
+
+    // Add to wishlist functionality
+    window.addToWishlist = function(productId) {
+        fetch('{% url "wishlist:add_to_wishlist" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                product_id: productId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                // Update wishlist count in header
+                document.getElementById('wishlist-count').textContent = data.wishlist_count;
+                // Show success message
+                alert('Product added to wishlist!');
+            } else {
+                alert(data.message || 'Error adding to wishlist');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding to wishlist');
+        });
+    };
+});
+</script>
+{% endblock %}

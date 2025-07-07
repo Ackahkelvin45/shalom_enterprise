@@ -1,0 +1,625 @@
+{% extends 'shalom_enterprise/layout.html' %}
+{%load static %}
+{% load custom_filters %}
+
+{% block title %}Hot Deals - SA Express{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Hot Deals</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-3">
+                
+                <form id="filter-form" method="get" action="{% url 'products:hot-deals' %}">
+                    <!-- Search Hot Deals -->
+                    <div class="aside">
+                        <h3 class="aside-title">Search Hot Deals</h3>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" 
+                                   placeholder="Product name..." value="{{ search_query|default:'' }}">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                
+                    <!-- Categories -->
+                    <div class="aside">
+                        <h3 class="aside-title">Categories</h3>
+                        <div class="checkbox-filter">
+                            {% for category in categories %}
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="category-{{ category.id }}" name="category" 
+                                       value="{{ category.id }}" 
+                                       {% if category.id in selected_categories %}checked{% endif %}>
+                                <label for="category-{{ category.id }}">
+                                    <span></span>
+                                    {{ category.name }}
+                                    <small>({{ category.deal_count }})</small>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                
+                    <!-- Price Range -->
+                    <div class="aside">
+                        <h3 class="aside-title">Deal Price</h3>
+                        <div class="price-filter">
+                            <div id="price-slider"></div>
+                            <div class="input-number price-min">
+                                <input id="price-min" type="number" name="price_min" 
+                                       value="{{ price_min|default:'' }}" placeholder="Min">
+                                <span class="qty-up">+</span>
+                                <span class="qty-down">-</span>
+                            </div>
+                            <span>-</span>
+                            <div class="input-number price-max">
+                                <input id="price-max" type="number" name="price_max" 
+                                       value="{{ price_max|default:'' }}" placeholder="Max">
+                                <span class="qty-up">+</span>
+                                <span class="qty-down">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Discount Range -->
+                    <div class="aside">
+                        <h3 class="aside-title">Discount %</h3>
+                        <div class="checkbox-filter">
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="discount-10" name="discount_range" 
+                                       value="10-29" {% if '10-29' in selected_discount_ranges %}checked{% endif %}>
+                                <label for="discount-10">
+                                    <span></span>
+                                    10% - 29%
+                                </label>
+                            </div>
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="discount-30" name="discount_range" 
+                                       value="30-49" {% if '30-49' in selected_discount_ranges %}checked{% endif %}>
+                                <label for="discount-30">
+                                    <span></span>
+                                    30% - 49%
+                                </label>
+                            </div>
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="discount-50" name="discount_range" 
+                                       value="50+" {% if '50+' in selected_discount_ranges %}checked{% endif %}>
+                                <label for="discount-50">
+                                    <span></span>
+                                    50% & Above
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date Range Filter -->
+                    <div class="aside">
+                        <h3 class="aside-title">Deal Date Range</h3>
+                        <div class="date-range-filter">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i> From</span>
+                                <input type="date" class="form-control" name="start_date" 
+                                       value="{{ request.GET.start_date|default:'' }}">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px;">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i> To</span>
+                                <input type="date" class="form-control" name="end_date" 
+                                       value="{{ request.GET.end_date|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Brands -->
+                    <div class="aside">
+                        <h3 class="aside-title">Brand</h3>
+                        <div class="checkbox-filter">
+                            {% for brand in brands %}
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="brand-{{ brand.id }}" name="brand" 
+                                       value="{{ brand.id }}"
+                                       {% if brand.id in selected_brands %}checked{% endif %}>
+                                <label for="brand-{{ brand.id }}">
+                                    <span></span>
+                                    {{ brand.name }}
+                                    {% if brand.deal_count > 0 %}
+                                    <small>({{ brand.deal_count}})</small>
+                                    {% else %}
+                                    <small>(0)</small>
+                                    {% endif %}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Deal Status -->
+                    <div class="aside">
+                        <h3 class="aside-title">Deal Status</h3>
+                        <div class="checkbox-filter">
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="ending-soon" name="deal_status" 
+                                       value="ending_soon" {% if 'ending_soon' in selected_deal_status %}checked{% endif %}>
+                                <label for="ending-soon">
+                                    <span></span>
+                                    Ending Soon (24h)
+                                </label>
+                            </div>
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="new-deals" name="deal_status" 
+                                       value="new_deals" {% if 'new_deals' in selected_deal_status %}checked{% endif %}>
+                                <label for="new-deals">
+                                    <span></span>
+                                    New Deals (7 days)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Filter Buttons -->
+                    <div class="aside">
+                        <button type="submit" class="btn primary-btn" style="width: 100%;">
+                            <i class="fa fa-filter"></i>
+                            Filter
+                        </button>
+                        {% if selected_categories or selected_brands or price_min or price_max or search_query or selected_discount_ranges or selected_deal_status or request.GET.start_date or request.GET.end_date %}
+                        <a href="{% url 'products:hot-deals' %}" class="btn btn-default" style="width: 100%; margin-top: 10px;">
+                            Clear Filters
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+                
+                <!-- Top Hot Deals Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Biggest Discounts</h3>
+                    {% for top_deal in top_deals %}
+                    <div class="product-widget">
+                        <div class="product-img">
+                            {% with top_deal.product.images.first as main_image %}
+                                {% if main_image %}
+                                    <img src="{{ main_image.image.url }}" alt="{{ top_deal.product.name }}">
+                                {% else %}
+                                    <img src="{% static '/img/no-image.png' %}" alt="No image available">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="product-body">
+                            <p class="product-category">{{ top_deal.product.category.name }}</p>
+                            <h3 class="product-name"><a href="{% url 'products:product-detail' top_deal.product.slug %}">{{ top_deal.product.name|truncatechars:30 }}</a></h3>
+                            <h4 class="product-price">
+                                GHS {{ top_deal.current_price }}
+                                <del class="product-old-price">GHS {{ top_deal.product.price }}</del>
+                            </h4>
+                            {% if top_deal.discount_percentage %}
+                            <span class="deal-discount" style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">
+                                -{{ top_deal.discount_percentage }}%
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- /Top Hot Deals Widget -->
+            </div>
+            <!-- /ASIDE -->
+
+            <!-- STORE -->
+            <div id="store" class="col-md-9">
+                <!-- store top filter -->
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <label>
+                            Show:
+                            <select class="input-select" onchange="window.location.href=this.value">
+                                <option value="?page_size=20{% for key,value in request.GET.items %}{% if key != 'page_size' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.page_size == '20' or not request.GET.page_size %}selected{% endif %}>20</option>
+                                <option value="?page_size=50{% for key,value in request.GET.items %}{% if key != 'page_size' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.page_size == '50' %}selected{% endif %}>50</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="store-sort">
+                        <label>
+                            Sort By:
+                            <select class="input-select" onchange="window.location.href=this.value">
+                                <option value="?sort=discount_desc{% for key,value in request.GET.items %}{% if key != 'sort' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.sort == 'discount_desc' or not request.GET.sort %}selected{% endif %}>Highest Discount</option>
+                                <option value="?sort=price_asc{% for key,value in request.GET.items %}{% if key != 'sort' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="?sort=price_desc{% for key,value in request.GET.items %}{% if key != 'sort' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                                <option value="?sort=ending_soon{% for key,value in request.GET.items %}{% if key != 'sort' and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" {% if request.GET.sort == 'ending_soon' %}selected{% endif %}>Ending Soon</option>
+                            </select>
+                        </label>
+                    </div>
+                    <ul class="store-grid">
+                        <li class="active"><i class="fa fa-th"></i></li>
+                        <li><a href="#"><i class="fa fa-th-list"></i></a></li>
+                    </ul>
+                </div>
+                <!-- /store top filter -->
+
+                <!-- Hot Deals Counter -->
+                <div class="alert alert-info" style="margin-bottom: 20px;">
+                    <i class="fa fa-fire"></i> <strong>{{ hot_deals.count }}</strong> Hot Deals Available Now!
+                </div>
+
+                <!-- store products -->
+                <div class="row">
+                    {% for deal in hot_deals %}
+                    <div class="col-md-4 col-xs-6">
+                        <div class="product">
+                            <div class="product-img" style="height: 300px!important; position: relative;">
+                                {% with deal.product.images.first as main_image %}
+                                    {% if main_image %}
+                                        <img src="{{ main_image.image.url }}" alt="{{ deal.product.name }}">
+                                    {% else %}
+                                        <img src="{% static '/img/no-image.png' %}" alt="No image available">
+                                    {% endif %}
+                                {% endwith %}
+                                
+                                <div class="product-label">
+                                    {% if deal.discount_percentage %}
+                                    <span class="sale" style="background: #ff6b6b;">
+                                        -{{ deal.discount_percentage }}%
+                                    </span>
+                                    {% endif %}
+                                    <span class="new">HOT</span>
+                                </div>
+
+                                <!-- Deal Timer -->
+                                <div class="deal-timer" style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;">
+                                    <i class="fa fa-clock-o"></i>
+                                    <span class="timer-text" data-end-date="{{ deal.end_date|date:'c' }}">
+                                        Ends: {{ deal.end_date|date:'M d, Y H:i' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ deal.product.category.name }}</p>
+                                <h3 class="product-name">
+                                    <a href="{% url 'products:product-detail' deal.product.slug %}">{{ deal.product.name }}</a>
+                                </h3>
+                                <h4 class="product-price">
+                                    <span style="color: #ff6b6b; font-weight: bold;">GHS {{ deal.current_price }}</span>
+                                    <del class="product-old-price">GHS {{ deal.product.price }}</del>
+                                </h4>
+                                <div class="product-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="product-btns">
+                                  
+                                    <button class="quick-view">
+                                        <a href="{% url 'products:product-detail' deal.product.slug %}">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <span class="tooltipp">quick view</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="add-to-cart">
+                                <button class="add-to-cart-btn" onclick="addToCart({{ deal.product.id }}, 1)">
+                                    <i class="fa fa-shopping-cart"></i> add to cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-md-12">
+                        <div class="alert alert-warning text-center">
+                            <h4><i class="fa fa-exclamation-triangle"></i> No Hot Deals Available</h4>
+                            <p>Check back later for amazing deals!</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- /store products -->
+
+                <!-- store bottom filter -->
+                <div class="store-filter clearfix">
+                    <span class="store-qty">Showing {{ hot_deals.start_index }}-{{ hot_deals.end_index }} of {{ hot_deals.paginator.count }} hot deals</span>
+                    <ul class="store-pagination">
+                        {% if hot_deals.has_previous %}
+                            <li><a href="?page={{ hot_deals.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"><i class="fa fa-angle-left"></i></a></li>
+                        {% endif %}
+                        
+                        {% for num in hot_deals.paginator.page_range %}
+                            {% if hot_deals.number == num %}
+                                <li class="active">{{ num }}</li>
+                            {% elif num > hot_deals.number|add:'-3' and num < hot_deals.number|add:'3' %}
+                                <li><a href="?page={{ num }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if hot_deals.has_next %}
+                            <li><a href="?page={{ hot_deals.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"><i class="fa fa-angle-right"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <!-- /store bottom filter -->
+            </div>
+            <!-- /STORE -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                    <form>
+                        <input class="input" type="email" placeholder="Enter Your Email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /NEWSLETTER -->
+
+{% block scripts %}
+<style>
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .product {
+        transition: all 0.3s ease;
+    }
+    
+    .product:hover {
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+    
+    .product-label .sale {
+        background: #ff6b6b;
+        animation: pulse 2s infinite;
+    }
+    
+    .product-label .new {
+        background: #28a745;
+    }
+
+    /* Date Range Filter Styles */
+    .date-range-filter {
+        margin-bottom: 15px;
+    }
+
+    .date-range-filter .input-group {
+        width: 100%;
+    }
+
+    .date-range-filter .input-group-addon {
+        min-width: 40px;
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        font-size: 12px;
+    }
+
+    .date-range-filter .form-control {
+        border-left: 0;
+        font-size: 12px;
+        height: 34px;
+    }
+
+    /* Make the date picker icon visible */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 1;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filter-form');
+    
+    // Auto-submit when checkboxes change
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            filterForm.submit();
+        });
+    });
+    
+    // Submit on Enter key in search field
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                filterForm.submit();
+            }
+        });
+    }
+
+    // Initialize date pickers with some sensible defaults
+    const today = new Date();
+    const oneWeekFromNow = new Date();
+    oneWeekFromNow.setDate(today.getDate() + 7);
+    
+    // Format dates as YYYY-MM-DD
+    function formatDate(date) {
+        const d = new Date(date);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        const year = d.getFullYear();
+        
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        
+        return [year, month, day].join('-');
+    }
+    
+    // Set default "To" date to one week from now if empty
+    const endDateInput = document.querySelector('input[name="end_date"]');
+    if (endDateInput && !endDateInput.value) {
+        endDateInput.value = formatDate(oneWeekFromNow);
+    }
+    
+    // Set default "From" date to today if empty
+    const startDateInput = document.querySelector('input[name="start_date"]');
+    if (startDateInput && !startDateInput.value) {
+        startDateInput.value = formatDate(today);
+    }
+    
+    // Validate date range
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            const startDate = document.querySelector('input[name="start_date"]').value;
+            const endDate = document.querySelector('input[name="end_date"]').value;
+            
+            if (startDate && endDate && startDate > endDate) {
+                alert('End date must be after start date');
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // Deal countdown timers
+    const timers = document.querySelectorAll('.timer-text');
+    timers.forEach(timer => {
+        const endDate = new Date(timer.getAttribute('data-end-date'));
+        
+        function updateTimer() {
+            const now = new Date();
+            const timeLeft = endDate - now;
+            
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                if (days > 0) {
+                    timer.textContent = `${days}d ${hours}h left`;
+                } else if (hours > 0) {
+                    timer.textContent = `${hours}h ${minutes}m left`;
+                } else {
+                    timer.textContent = `${minutes}m left`;
+                }
+            } else {
+                timer.textContent = 'Deal Expired';
+                timer.parentElement.style.background = '#dc3545';
+            }
+        }
+        
+        updateTimer();
+        setInterval(updateTimer, 60000); // Update every minute
+    });
+});
+
+// Add to Cart function
+function addToCart(productId, quantity) {
+    fetch('/add-to-cart/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update cart count in navbar
+            const cartCount = document.querySelector('.qty');
+            if (cartCount) {
+                cartCount.textContent = data.cart_items_count;
+            }
+            // Show success message
+            alert('Product added to cart successfully!');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding to cart');
+    });
+}
+
+// Add to Wishlist function
+function addToWishlist(productId) {
+    fetch('/add-to-wishlist/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            product_id: productId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Product added to wishlist successfully!');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding to wishlist');
+    });
+}
+</script>
+{% endblock %}
+
+{% endblock %}

@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.core.cache import cache
+
 
 # Create your models here.
 
@@ -51,11 +53,33 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
+    @classmethod
+    def get_top_sellers(cls, limit=10):
+        """Get the top selling products with caching"""
+        cache_key = f'top_sellers_{limit}'
+        top_sellers = cache.get(cache_key)
+        
+        if top_sellers is None:
+            top_sellers = list(cls.objects.filter(
+                topseller__is_active=True
+            ).select_related(
+                'topseller'
+            ).order_by(
+                '-topseller__sales_count'
+            )[:limit])
+            cache.set(cache_key, top_sellers, 60 * 60)  # Cache for 1 hour
+        
+        return top_sellers
+    
+
+    @property
+    def rating_count(self):
+            """Return total number of reviews"""
+            return self.reviews.count()
 
     @property
     def average_rating(self):
         """Calculate average rating using prefetched data if available"""
-        # Try to use prefetched reviews first
         reviews = getattr(self, 'prefetched_reviews', None) or self.reviews.all()
         
         if not reviews:
@@ -63,7 +87,7 @@ class Product(models.Model):
             
         total = sum(review.rating for review in reviews)
         average = total / len(reviews)
-        return max(0, min(5, round(average * 2) / 2))  # Round to nearest 0.5
+        return round(average * 2) / 2  # Round to nearest 0.5
 
     @property
     def rating_count(self):
@@ -103,6 +127,7 @@ class Wishlist(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price_used = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -113,7 +138,22 @@ class Cart(models.Model):
         verbose_name_plural = 'Carts'
 
     def __str__(self):
-        return f"{self.user.email}'s cart: {self.product.name} x{self.quantity}"
+        price_info = f"@{self.price_used}"
+        if self.price_used < self.product.price:
+            price_info += f" (DEAL! Save GHS{self.product.price - self.price_used} each)"
+        return f"{self.user.email}'s cart: {self.product.name} x{self.quantity} {price_info}"
+    
+
+    @property
+    def total_price(self):
+        return self.price_used * self.quantity  # Use price_used instead of product.price
+
+    @property
+    def total_discount(self):
+        if self.price_used < self.product.price:
+            return (self.product.price - self.price_used) * self.quantity
+        return 0
+    
 
     @property
     def total_price(self):
@@ -243,3 +283,33 @@ class HotDeal(models.Model):
         return (self.is_active and 
                 self.start_date <= now <= self.end_date)
 
+
+
+
+class TopSeller(models.Model):
+    """Model to track top selling products"""
+    product = models.OneToOneField(
+        Product, 
+        on_delete=models.CASCADE,
+        related_name='topseller'  # Changed from 'top_seller' to 'topseller'
+    )
+    sales_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Total number of times this product has been sold"
+    )
+    last_updated = models.DateTimeField(
+        auto_now=True,
+        help_text="When this record was last updated"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Whether this product should be displayed as a top seller"
+    )
+    
+    class Meta:
+        ordering = ['-sales_count']
+        verbose_name = "Top Seller"
+        verbose_name_plural = "Top Sellers"
+
+    def __str__(self):
+        return f"Top Seller: {self.product.name} ({self.sales_count} sales)"

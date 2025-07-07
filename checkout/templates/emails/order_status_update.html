@@ -1,22 +1,419 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Status Update</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container { 
+            max-width: 650px; 
+            margin: 0 auto; 
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #D10024 0%, #e63946 100%);
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content { 
+            padding: 40px 30px; 
+            background: #ffffff;
+        }
+        
+        .greeting {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .status-update {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4f8 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #D10024;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .status-message {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .order-number {
+            background: linear-gradient(135deg, #D10024 0%, #e63946 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .status-pending {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+        }
+        
+        .status-confirmed {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+        
+        .status-shipped {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        
+        .status-delivered {
+            background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
+            color: white;
+        }
+        
+        .status-cancelled {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        
+        .order-details {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffeaa7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #D10024;
+        }
+        
+        .order-details h3 {
+            color: #D10024;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #D10024;
+            padding-bottom: 10px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .detail-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .detail-content {
+            flex: 1;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #D10024;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #D10024 0%, #e63946 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        
+        .progress-step {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .progress-step.active {
+            color: #D10024;
+            font-weight: 600;
+        }
+        
+        .thank-you {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4f8 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .thank-you p {
+            color: #555;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .footer { 
+            text-align: center; 
+            padding: 25px;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            opacity: 0.8;
+        }
+        
+        .signature {
+            font-style: italic;
+            color: #D10024;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .detail-icon {
+                margin-bottom: 10px;
+            }
+            
+            .progress-steps {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Hello {{ user.first_name }},</p>
-    
-    <p>Your order #{{ order.order_number }} has been updated to: <strong>{{ status }}</strong></p>
-    
-    <h3>Order details:</h3>
-    <ul>
-        <li>Total amount: ${{ order.total_amount }}</li>
-        <li>Shipping address: {{ order.shipping_address }}</li>
-    </ul>
-    
-    <p>Thank you for shopping with us!</p>
-    
-    <p>Best regards,<br>
-    The Store Team</p>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Order Update</h1>
+            <p>Your order status has been updated</p>
+        </div>
+        
+        <div class="content">
+            <p class="greeting">Hello {{ user.first_name }}! 👋</p>
+            
+            <div class="status-update">
+                <div class="status-message">
+                    Your order <span class="order-number">#{{ order.order_number }}</span> status has been updated to:
+                </div>
+                <div class="status-badge status-{{ status|lower }}">
+                    {{ status }}
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {% if status == 'pending' %}10%{% elif status == 'confirmed' %}30%{% elif status == 'shipped' %}75%{% elif status == 'delivered' %}100%{% else %}0%{% endif %}"></div>
+                </div>
+                
+                <div class="progress-steps">
+                    <div class="progress-step {% if status == 'pending' or status == 'confirmed' or status == 'shipped' or status == 'delivered' %}active{% endif %}">
+                        ⏳ Pending
+                    </div>
+                    <div class="progress-step {% if status == 'confirmed' or status == 'shipped' or status == 'delivered' %}active{% endif %}">
+                        ✅ Confirmed
+                    </div>
+                    <div class="progress-step {% if status == 'shipped' or status == 'delivered' %}active{% endif %}">
+                        🚚 Shipped
+                    </div>
+                    <div class="progress-step {% if status == 'delivered' %}active{% endif %}">
+                        🎉 Delivered
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-details">
+                <h3>📋 Order Details</h3>
+                
+                <div class="detail-item">
+                    <div class="detail-icon">💰</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Total Amount</div>
+                        <div class="detail-value">GHS {{ order.total_amount }}</div>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Shipping Address</div>
+                        <div class="detail-value">
+                            <strong>{{ order.shipping_address.full_name }}</strong><br>
+                            {{ order.shipping_address.address_line_1 }}<br>
+                            {% if order.shipping_address.address_line_2 %}
+                                {{ order.shipping_address.address_line_2 }}<br>
+                            {% endif %}
+                            {{ order.shipping_address.city }}, {{ order.shipping_address.region }}<br>
+                            📞 {{ order.shipping_address.phone }}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if status == 'shipped' %}
+                <div class="detail-item">
+                    <div class="detail-icon">🚛</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Estimated Delivery</div>
+                        <div class="detail-value">2-3 Business Days</div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if status == 'delivered' %}
+                <div class="detail-item">
+                    <div class="detail-icon">✅</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Delivery Status</div>
+                        <div class="detail-value">Successfully delivered!</div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if status == 'cancelled' %}
+                <div class="detail-item">
+                    <div class="detail-icon">❌</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Cancellation Status</div>
+                        <div class="detail-value">Order has been cancelled. Refund will be processed within 3-5 business days.</div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if status == 'pending' %}
+                <div class="detail-item">
+                    <div class="detail-icon">⏳</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Next Step</div>
+                        <div class="detail-value">We're reviewing your order and will confirm it soon!</div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if status == 'confirmed' %}
+                <div class="detail-item">
+                    <div class="detail-icon">📦</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Next Step</div>
+                        <div class="detail-value">Your order is being prepared for shipment.</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="thank-you">
+                <p>🙏 Thank you for shopping with us!</p>
+                <p>We appreciate your business and hope you love your purchase.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Best regards,</p>
+            <p class="signature">The SA Express Team</p>
+            <p>© {% now "Y" %} SA Express. All rights reserved. | Made with ❤️ for our customers</p>
+        </div>
+    </div>
 </body>
 </html>
