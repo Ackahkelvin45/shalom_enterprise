@@ -6,6 +6,7 @@ services:
     restart: always
     volumes:
       - ./static:/code/static
+      - ./staticfiles:/code/staticfiles
       - ./media:/code/media
       - ./nginx:/etc/nginx/conf.d  # Removed trailing slash
     ports:
@@ -19,7 +20,8 @@ services:
     command: ["python", "-m", "uvicorn", "shalom_enterprise.asgi:application", "--host", "0.0.0.0", "--port", "8000", "--workers", "2", "--log-level", "info"]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./static:/code/static
+      - ./static:/code/static  # Source static files
+      - ./staticfiles:/code/staticfiles  # Collected static files
       - ./media:/code/media
     env_file: ./.env
     depends_on:
@@ -57,6 +59,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./static:/code/static
+      - ./staticfiles:/code/staticfiles  # Collected static files
       - ./media:/code/media
     depends_on:
       db:
