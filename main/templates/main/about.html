@@ -1,0 +1,389 @@
+{% extends 'shalom_enterprise/layout.html' %}
+{% load static %}
+
+{% block title %}About Us - SA Express{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- MAIN CONTENT -->
+            <div class="col-md-12">
+                
+                <!-- Hero Section -->
+                <div class="about-hero" style="text-align: center; margin-bottom: 50px;">
+                    <h1 style="color: #D10024; font-size: 48px; font-weight: bold; margin-bottom: 20px;">About SA Express</h1>
+                    <p style="font-size: 20px; color: #666; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                        Ghana's premier destination for quality electronics and appliances, bringing the latest technology to your doorstep with unmatched service and support.
+                    </p>
+                </div>
+
+                <!-- Main Story Section -->
+                <div class="row" style="margin-bottom: 60px;">
+                    <div class="col-md-6">
+                        <div class="about-content">
+                            <h2 style="color: #333; font-size: 32px; margin-bottom: 20px;">Our Story</h2>
+                            <p style="font-size: 16px; line-height: 1.8; color: #666; margin-bottom: 20px;">
+                                SA Express stands as one of Ghana's top customer-focused electronics and appliance companies. For over 5 years, we have been dedicated to bringing the latest technology directly to your doorstep, whether for your home, office, or business needs.
+                            </p>
+                            <p style="font-size: 16px; line-height: 1.8; color: #666; margin-bottom: 20px;">
+                                We believe that every Ghanaian deserves access to the best quality brands at great prices. This vision drives everything we do, from carefully selecting our product range to ensuring exceptional customer service at every touchpoint.
+                            </p>
+                            <p style="font-size: 16px; line-height: 1.8; color: #666;">
+                                Our commitment extends beyond just selling products. We provide comprehensive after-sales support through our strategically located service centres across Ghana, ensuring that your investment in technology is protected and maintained.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="about-image" style="text-align: center;">
+                            <img src="{% static 'img/about-hero.jpg' %}" alt="SA Express Store" style="width: 100%; height: 400px; object-fit: cover; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Values Section -->
+                <div class="values-section" style="background: #f8f8f8; padding: 60px 0; margin: 60px -15px;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align: center; margin-bottom: 50px;">
+                                <h2 style="color: #333; font-size: 32px; margin-bottom: 20px;">Our Core Values</h2>
+                                <p style="font-size: 18px; color: #666; max-width: 600px; margin: 0 auto;">
+                                    These principles guide every decision we make and every interaction we have with our customers.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="value-item" style="text-align: center; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                                    <div class="value-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <h3 style="color: #333; font-size: 24px; margin-bottom: 15px;">Quality First</h3>
+                                    <p style="color: #666; line-height: 1.6;">
+                                        We sell only the best quality brands, ensuring that every product meets our high standards and exceeds customer expectations.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="value-item" style="text-align: center; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                                    <div class="value-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <h3 style="color: #333; font-size: 24px; margin-bottom: 15px;">Customer Focus</h3>
+                                    <p style="color: #666; line-height: 1.6;">
+                                        Our customers are at the heart of everything we do. We're committed to providing exceptional service and support at every step.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="value-item" style="text-align: center; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                                    <div class="value-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
+                                        <i class="fa fa-shield"></i>
+                                    </div>
+                                    <h3 style="color: #333; font-size: 24px; margin-bottom: 15px;">Reliability</h3>
+                                    <p style="color: #666; line-height: 1.6;">
+                                        From product quality to after-sales support, we deliver consistent, reliable service that you can count on.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What We Offer Section -->
+                <div class="row" style="margin: 60px 0;">
+                    <div class="col-md-12">
+                        <h2 style="color: #333; font-size: 32px; margin-bottom: 40px; text-align: center;">What We Offer</h2>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
+                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
+                                <i class="fa fa-laptop"></i>
+                            </div>
+                            <div class="offer-content">
+                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Latest Technology</h4>
+                                <p style="color: #666; line-height: 1.6; margin: 0;">
+                                    Access to the newest electronics and appliances from leading global brands.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
+                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
+                                <i class="fa fa-tag"></i>
+                            </div>
+                            <div class="offer-content">
+                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Great Prices</h4>
+                                <p style="color: #666; line-height: 1.6; margin: 0;">
+                                    Competitive pricing that makes quality technology accessible to every Ghanaian.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
+                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
+                                <i class="fa fa-truck"></i>
+                            </div>
+                            <div class="offer-content">
+                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Nationwide Delivery</h4>
+                                <p style="color: #666; line-height: 1.6; margin: 0;">
+                                    Fast and reliable delivery to your home, office, or business across Ghana.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
+                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="offer-content">
+                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Expert Support</h4>
+                                <p style="color: #666; line-height: 1.6; margin: 0;">
+                                    Knowledgeable customer service team ready to help with all your technology needs.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
+                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
+                                <i class="fa fa-wrench"></i>
+                            </div>
+                            <div class="offer-content">
+                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Service Centres</h4>
+                                <p style="color: #666; line-height: 1.6; margin: 0;">
+                                    Multiple service centres across Ghana for maintenance and repairs.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
+                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
+                                <i class="fa fa-certificate"></i>
+                            </div>
+                            <div class="offer-content">
+                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Warranty Protection</h4>
+                                <p style="color: #666; line-height: 1.6; margin: 0;">
+                                    Comprehensive warranty coverage and protection for your investments.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Section -->
+                <div class="stats-section" style="background: #D10024; padding: 60px 0; margin: 60px -15px; color: white;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align: center; margin-bottom: 50px;">
+                                <h2 style="color: white; font-size: 32px; margin-bottom: 20px;">Our Impact</h2>
+                                <p style="font-size: 18px; color: rgba(255,255,255,0.9); max-width: 600px; margin: 0 auto;">
+                                    Over 5 years of serving Ghana with excellence
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
+                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">5+</div>
+                                    <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Years of Experience</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
+                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">1000+</div>
+                                    <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Happy Customers</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
+                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">50+</div>
+                                    <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Premium Brands</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
+                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">10+</div>
+                                    <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Service Centres</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission & Vision Section -->
+                <div class="row" style="margin: 60px 0;">
+                    <div class="col-md-6">
+                        <div class="mission-box" style="background: #f8f8f8; padding: 40px; border-radius: 10px; height: 100%;">
+                            <div class="mission-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
+                                <i class="fa fa-bullseye"></i>
+                            </div>
+                            <h3 style="color: #333; font-size: 24px; margin-bottom: 20px;">Our Mission</h3>
+                            <p style="color: #666; line-height: 1.8; font-size: 16px;">
+                                To make the latest technology accessible to every Ghanaian by providing high-quality electronics and appliances at competitive prices, backed by exceptional customer service and reliable after-sales support.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="vision-box" style="background: #f8f8f8; padding: 40px; border-radius: 10px; height: 100%;">
+                            <div class="vision-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
+                                <i class="fa fa-eye"></i>
+                            </div>
+                            <h3 style="color: #333; font-size: 24px; margin-bottom: 20px;">Our Vision</h3>
+                            <p style="color: #666; line-height: 1.8; font-size: 16px;">
+                                To be Ghana's most trusted and preferred destination for electronics and appliances, known for our commitment to quality, customer satisfaction, and technological innovation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact CTA Section -->
+                <div class="cta-section" style="background: linear-gradient(135deg, #D10024, #ff1744); padding: 60px 0; margin: 60px -15px; text-align: center; color: white;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2 style="color: white; font-size: 32px; margin-bottom: 20px;">Ready to Experience the SA Express Difference?</h2>
+                                <p style="font-size: 18px; color: rgba(255,255,255,0.9); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                                    Discover our wide range of quality electronics and appliances, and let us bring the latest technology to your doorstep.
+                                </p>
+                                <div class="cta-buttons">
+                                    <a href="{% url 'products:all-products' %}" class="btn btn-white" style="background: white; color: #D10024; padding: 15px 30px; font-size: 16px; font-weight: bold; border-radius: 25px; text-decoration: none; margin-right: 20px; display: inline-block;">
+                                        Shop Now
+                                    </a>
+                                    <a href="#" class="btn btn-outline-white" style="border: 2px solid white; color: white; padding: 13px 30px; font-size: 16px; font-weight: bold; border-radius: 25px; text-decoration: none; display: inline-block;">
+                                        Contact Us
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /MAIN CONTENT -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                    <form>
+                        <input class="input" type="email" placeholder="Enter Your Email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /NEWSLETTER -->
+
+{% block scripts %}
+<style>
+.btn-white {
+    background: white !important;
+    color: #D10024 !important;
+    border: none !important;
+    transition: all 0.3s ease;
+}
+
+.btn-white:hover {
+    background: #f8f8f8 !important;
+    color: #D10024 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-outline-white {
+    border: 2px solid white !important;
+    color: white !important;
+    background: transparent !important;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-white:hover {
+    background: white !important;
+    color: #D10024 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.value-item:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+.offer-item:hover .offer-icon {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+.mission-box:hover,
+.vision-box:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .about-hero h1 {
+        font-size: 36px !important;
+    }
+    
+    .about-hero p {
+        font-size: 18px !important;
+    }
+    
+    .values-section,
+    .stats-section,
+    .cta-section {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .cta-buttons a {
+        display: block !important;
+        margin: 10px 0 !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% endblock %}

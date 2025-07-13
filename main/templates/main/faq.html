@@ -1,0 +1,629 @@
+{% extends 'shalom_enterprise/layout.html' %}
+{% load static %}
+
+{% block title %}FAQ - SA Express{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-3">
+                
+                <!-- Search FAQ -->
+                <div class="aside">
+                    <h3 class="aside-title">Search FAQ</h3>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="faq-search" 
+                               placeholder="Search questions..." onkeyup="searchFAQ()">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="searchFAQ()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- FAQ Categories -->
+                <div class="aside">
+                    <h3 class="aside-title">FAQ Categories</h3>
+                    <div class="checkbox-filter">
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="cat-orders" value="orders" onchange="filterFAQs()">
+                            <label for="cat-orders">
+                                <span></span>
+                                Orders & Payment
+                                <small>(8)</small>
+                            </label>
+                        </div>
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="cat-shipping" value="shipping" onchange="filterFAQs()">
+                            <label for="cat-shipping">
+                                <span></span>
+                                Shipping & Delivery
+                                <small>(6)</small>
+                            </label>
+                        </div>
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="cat-products" value="products" onchange="filterFAQs()">
+                            <label for="cat-products">
+                                <span></span>
+                                Products & Inventory
+                                <small>(5)</small>
+                            </label>
+                        </div>
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="cat-account" value="account" onchange="filterFAQs()">
+                            <label for="cat-account">
+                                <span></span>
+                                Account & Support
+                                <small>(4)</small>
+                            </label>
+                        </div>
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="cat-returns" value="returns" onchange="filterFAQs()">
+                            <label for="cat-returns">
+                                <span></span>
+                                Returns & Refunds
+                                <small>(3)</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clear Filters -->
+                <div class="aside">
+                    <button type="button" class="btn btn-default" style="width: 100%;" onclick="clearFilters()">
+                        Clear Filters
+                    </button>
+                </div>
+
+                <!-- Contact Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Need More Help?</h3>
+                    <div class="product-widget">
+                        <div class="product-body">
+                            <p>Can't find what you're looking for?</p>
+                            <a href="#" class="btn primary-btn" style="width: 100%;">
+                                <i class="fa fa-envelope"></i> Contact Support
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /ASIDE -->
+
+            <!-- FAQ CONTENT -->
+            <div id="faq-content" class="col-md-9">
+                <!-- FAQ Header -->
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <h2>Frequently Asked Questions</h2>
+                        <p>Find answers to common questions about our products and services.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ Accordions -->
+                <div class="faq-container">
+                    
+                    <!-- Orders & Payment -->
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I place an order on SA Express?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To place an order, browse our products, add items to your cart, and proceed to checkout. You'll need to create an account or sign in, provide shipping information, and select your payment method.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What payment methods do you accept?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We accept major credit cards (Visa, MasterCard, American Express), PayPal, bank transfers, and mobile money payments. All payments are processed securely through our encrypted payment gateway.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Can I modify or cancel my order after placing it?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Orders can be modified or cancelled within 2 hours of placement. After this time, orders are processed and cannot be changed. Contact customer service immediately if you need to make changes.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I track my order?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Once your order ships, you'll receive a tracking number via email. You can also track your order by logging into your account and visiting the "My Orders" section.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Do you offer bulk discounts for large orders?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, we offer bulk discounts for orders over a certain quantity. Contact our sales team for custom pricing on large orders or corporate purchases.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What should I do if my payment is declined?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>If your payment is declined, check your card details, ensure sufficient funds, and try again. If the problem persists, contact your bank or try an alternative payment method.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Can I save items for later purchase?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, you can add items to your wishlist or save them in your cart for later. Items in your cart will be held for 24 hours before being released back to inventory.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="orders">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I apply a discount code or coupon?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>During checkout, you'll see a field to enter your discount code or coupon. Enter the code exactly as provided and click "Apply" to see the discount reflected in your total.</p>
+                        </div>
+                    </div>
+
+                    <!-- Shipping & Delivery -->
+                    <div class="faq-item" data-category="shipping">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What are your shipping options and costs?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We offer standard shipping (5-7 business days) and express shipping (2-3 business days). Shipping costs are calculated based on weight, size, and destination. Free shipping is available on orders over GHS 200.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="shipping">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Do you ship nationwide in Ghana?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, we ship to all regions in Ghana. Delivery times may vary based on location, with major cities typically receiving faster service than remote areas.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="shipping">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How long does delivery take?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Standard delivery takes 5-7 business days, express delivery takes 2-3 business days. Orders placed before 2 PM are processed the same day, while orders placed after 2 PM are processed the next business day.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="shipping">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Can I change my delivery address after placing an order?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Address changes are possible within 2 hours of order placement. After this time, orders are processed and address changes may not be possible. Contact customer service immediately if needed.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="shipping">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What happens if I'm not available for delivery?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our delivery partner will attempt delivery 2-3 times. If unsuccessful, the package will be held at a local pickup point for 5 business days before being returned to us.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="shipping">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Do you offer same-day delivery?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Same-day delivery is available in selected areas of Accra and Kumasi for orders placed before 12 PM. Additional charges apply for this premium service.</p>
+                        </div>
+                    </div>
+
+                    <!-- Products & Inventory -->
+                    <div class="faq-item" data-category="products">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I know if a product is in stock?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Product availability is shown on each product page. If an item is out of stock, you can sign up for notifications to be alerted when it's back in stock.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="products">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Are your products genuine and original?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, all our products are 100% genuine and sourced directly from authorized distributors and manufacturers. We provide authenticity guarantees on all items.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="products">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Do you offer product warranties?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, most products come with manufacturer warranties. Warranty terms vary by product and are clearly stated on each product page. We also offer extended warranty options for select items.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="products">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Can I request a product that's not in your catalog?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, we accept product requests. Contact our customer service team with details about the product you're looking for, and we'll do our best to source it for you.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="products">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How often do you update your product catalog?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We regularly update our catalog with new products and remove discontinued items. New arrivals are added weekly, and seasonal collections are updated quarterly.</p>
+                        </div>
+                    </div>
+
+                    <!-- Account & Support -->
+                    <div class="faq-item" data-category="account">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I create an account?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Click "Sign Up" at the top of any page, fill in your details, and verify your email address. You can also create an account during the checkout process.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="account">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I reset my password?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Click "Forgot Password" on the login page, enter your email address, and follow the instructions sent to your email to reset your password.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="account">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I contact customer service?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>You can reach our customer service team via email, phone, or live chat. Our support hours are Monday-Friday 8 AM-6 PM, and Saturday 9 AM-4 PM.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="account">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Can I update my account information?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, you can update your profile information, shipping addresses, and payment methods by logging into your account and visiting the "Account Settings" section.</p>
+                        </div>
+                    </div>
+
+                    <!-- Returns & Refunds -->
+                    <div class="faq-item" data-category="returns">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What is your return policy?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We accept returns within 30 days of purchase for most items. Products must be in original condition with all packaging and accessories. Some items like software and personal care products are non-returnable.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="returns">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I initiate a return?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Log into your account, go to "My Orders," select the item you want to return, and follow the return process. You'll receive a return authorization number and shipping instructions.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="returns">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How long do refunds take to process?</h4>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Refunds are processed within 5-7 business days after we receive and inspect the returned item. The refund will be credited to your original payment method.</p>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /FAQ Accordions -->
+
+                <!-- No Results Message -->
+                <div id="no-results" class="text-center" style="display: none; padding: 40px;">
+                    <h3>No FAQs found</h3>
+                    <p>Try adjusting your search terms or clearing filters.</p>
+                </div>
+
+            </div>
+            <!-- /FAQ CONTENT -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                    <form>
+                        <input class="input" type="email" placeholder="Enter Your Email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /NEWSLETTER -->
+
+{% block scripts %}
+<style>
+.faq-container {
+    margin-top: 20px;
+}
+
+.faq-item {
+    margin-bottom: 10px;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.faq-question {
+    padding: 15px 20px;
+    background: #f8f8f8;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+    background: #e6e6e6;
+}
+
+.faq-question h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.faq-question i {
+    color: #D10024;
+    transition: transform 0.3s ease;
+}
+
+.faq-question.active i {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.faq-answer.active {
+    max-height: 200px;
+    padding: 15px 20px;
+}
+
+.faq-answer p {
+    margin: 0;
+    line-height: 1.6;
+    color: #666;
+}
+
+.faq-item[data-category="orders"] .faq-question {
+    border-left: 4px solid #D10024;
+}
+
+.faq-item[data-category="shipping"] .faq-question {
+    border-left: 4px solid #007bff;
+}
+
+.faq-item[data-category="products"] .faq-question {
+    border-left: 4px solid #28a745;
+}
+
+.faq-item[data-category="account"] .faq-question {
+    border-left: 4px solid #ffc107;
+}
+
+.faq-item[data-category="returns"] .faq-question {
+    border-left: 4px solid #6f42c1;
+}
+</style>
+
+<script>
+function toggleFAQ(element) {
+    const answer = element.nextElementSibling;
+    const icon = element.querySelector('i');
+    
+    // Close all other FAQs
+    document.querySelectorAll('.faq-answer.active').forEach(item => {
+        if (item !== answer) {
+            item.classList.remove('active');
+            item.previousElementSibling.classList.remove('active');
+        }
+    });
+    
+    // Toggle current FAQ
+    answer.classList.toggle('active');
+    element.classList.toggle('active');
+}
+
+function searchFAQ() {
+    const searchTerm = document.getElementById('faq-search').value.toLowerCase();
+    const faqItems = document.querySelectorAll('.faq-item');
+    let visibleCount = 0;
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question h4').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+        
+        if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Show/hide no results message
+    const noResults = document.getElementById('no-results');
+    if (visibleCount === 0) {
+        noResults.style.display = 'block';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+function filterFAQs() {
+    const checkedCategories = [];
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    
+    checkboxes.forEach(checkbox => {
+        checkedCategories.push(checkbox.value);
+    });
+    
+    const faqItems = document.querySelectorAll('.faq-item');
+    let visibleCount = 0;
+    
+    faqItems.forEach(item => {
+        const category = item.getAttribute('data-category');
+        
+        if (checkedCategories.length === 0 || checkedCategories.includes(category)) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Show/hide no results message
+    const noResults = document.getElementById('no-results');
+    if (visibleCount === 0) {
+        noResults.style.display = 'block';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+function clearFilters() {
+    // Clear search
+    document.getElementById('faq-search').value = '';
+    
+    // Uncheck all checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    // Show all FAQs
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.style.display = 'block';
+    });
+    
+    // Hide no results message
+    document.getElementById('no-results').style.display = 'none';
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Show all FAQs initially
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.style.display = 'block';
+    });
+});
+</script>
+{% endblock %}
+
+{% endblock %}

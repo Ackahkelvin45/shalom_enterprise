@@ -31,3 +31,12 @@ def index_view(request):
         "brands": brands
     }
     return render(request, "main/index.html", context)
+
+
+
+def Faq_view(request):
+    return render(request, "main/faq.html")
+
+
+def about_view(request):
+    return render(request, "main/about.html")
