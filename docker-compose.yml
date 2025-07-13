@@ -1,69 +1,73 @@
-version: '3.8'
-
 services:
   nginx:
     image: nginx:1.27-alpine
     restart: always
     volumes:
       - ./static:/code/static
-      - ./staticfiles:/code/staticfiles
       - ./media:/code/media
-      - ./nginx:/etc/nginx/conf.d  # Removed trailing slash
+      - ./nginx/:/etc/nginx/conf.d
+
     ports:
       - '8000:80'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     depends_on:
       - web
 
   web:
+    image: &image shalom_enterprise
     build: .
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: start-first
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
     restart: always
-    command: ["python", "-m", "uvicorn", "shalom_enterprise.asgi:application", "--host", "0.0.0.0", "--port", "8000", "--workers", "2", "--log-level", "info"]
-    volumes:
+    command: [ "uvicorn", "--host", "0.0.0.0", "--port", "8000", "--workers", "2", "--log-level", "info", "shalom_enterprise.asgi:application" ]
+    volumes: &volumes
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./static:/code/static  # Source static files
-      - ./staticfiles:/code/staticfiles  # Collected static files
+      - ./static:/code/static
       - ./media:/code/media
-    env_file: ./.env
+    env_file: &env_file ./.env
     depends_on:
-      db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - db
 
   db:
     image: postgres:16-alpine
+    command: postgres -N 568
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      POSTGRES_DB: shalom_afric  # Changed to match your Django settings
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      PGDATA: /var/lib/postgresql/data/
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - POSTGRES_DB=shalom
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - PGDATA=/var/lib/postgresql/data/
+
+
 
   migration:
-    build: .
-    env_file: ./.env
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
-             python manage.py seed_db"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./static:/code/static
-      - ./staticfiles:/code/staticfiles  # Collected static files
-      - ./media:/code/media
+    image: *image
+    env_file: *env_file
+    command: /bin/sh -c 'python manage.py migrate && python manage.py collectstatic --noinput && python manage.py seed_db'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+    volumes: *volumes
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+
+ 
 
 volumes:
   postgres_data:
+  redis_data:
