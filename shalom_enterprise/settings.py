@@ -196,7 +196,7 @@ CORS_ALLOW_CREDENTIALS = True  # To allow cookies
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://shalom-enterprise-1.onrender.com',
+     "https://www.saexpress.store",
     # Add other trusted origins if needed
     'http://127.0.0.1',
     "http://127.0.0.1:8000",
