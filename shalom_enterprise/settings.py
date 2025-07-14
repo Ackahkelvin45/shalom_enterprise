@@ -189,6 +189,7 @@ CORS_ALLOWED_ORIGINS = [
         'https://saexpress.store',
          "http://www.saexpress.store",
          'http://saexpress.store',
+         
     ]
 
 CORS_ALLOW_CREDENTIALS = True  # To allow cookies
@@ -206,7 +207,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.google.com'
     'https://saexpress.shop',
         'http://saexpress.shop',
-    "http://www.saexpress.store/"
+    "http://www.saexpress.store/",
+    'https://saexpress.store',
     
     
 
