@@ -405,6 +405,7 @@ def get_password_reset_email_template(reset_link=None, custom_message=None):
     """
 
 def send_otp_email(email, otp):
+    
     try:
         subject = "Your OTP for Email Verification"
         text_content = f"Your OTP for email verification is: {otp}"
