@@ -205,8 +205,7 @@ CSRF_TRUSTED_ORIGINS = [
       "http://165.227.85.34",
     "https://165.227.85.34",
     'https://www.google.com'
-    'https://saexpress.shop',
-        'http://saexpress.shop',
+    'http://saexpress.store',
     "http://www.saexpress.store/",
     'https://saexpress.store',
     
