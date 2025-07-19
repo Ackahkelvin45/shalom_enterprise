@@ -1,0 +1,36 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    {% for card in custom_cards %}
+    <div class="bg-{{ card.color }}-50 dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-sm font-medium text-{{ card.color }}-800 dark:text-{{ card.color }}-200">
+                    {{ card.title }}
+                </h3>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                    {{ card.value }}
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ card.description }}
+                </p>
+            </div>
+            <div class="bg-{{ card.color }}-100 dark:bg-{{ card.color }}-900 p-3 rounded-full">
+                <span class="material-icons-outlined text-{{ card.color }}-600 dark:text-{{ card.color }}-300">
+                    {{ card.icon }}
+                </span>
+            </div>
+        </div>
+        {% if card.url %}
+        <a href="{{ card.url }}" class="inline-flex items-center text-{{ card.color }}-600 dark:text-{{ card.color }}-300 hover:text-{{ card.color }}-800 dark:hover:text-{{ card.color }}-200 text-sm font-medium mt-4">
+            View details
+            <span class="material-icons-outlined ml-1 text-sm">chevron_right</span>
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{{ block.super }}  {# This shows the default admin apps #}
+{% endblock %}

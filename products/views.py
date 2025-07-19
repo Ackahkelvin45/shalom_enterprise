@@ -40,7 +40,6 @@ def categories_json(request):
 
 
 
-
 def products(request):
     categories = ProductCategory.objects.all()
     
@@ -59,6 +58,9 @@ def products(request):
     ).prefetch_related('images')
     
     brands = Brand.objects.all()
+    
+    # Get top selling products
+    top_sellers = Product.get_top_sellers(limit=5)  # Get top 3 selling products
     
     # Get all filter parameters from request
     category_ids = request.GET.getlist('category')
@@ -107,6 +109,7 @@ def products(request):
         "price_min": price_min,
         "price_max": price_max,
         "search_query": search_query,
+        "top_sellers": top_sellers,  # Add top sellers to context
     }
     return render(request, "products/all_products.html", context)
 

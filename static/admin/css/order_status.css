@@ -1,0 +1,30 @@
+/* Style for status badges */
+.status-badge {
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Style for status select dropdown */
+.status-select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: white;
+    font-weight: bold;
+}
+
+/* Color options for select dropdown */
+.status-select option {
+    font-weight: bold;
+    padding: 5px;
+}
+
+.status-select option[value="pending"] { color: #FFA500; }
+.status-select option[value="processing"] { color: #1E90FF; }
+.status-select option[value="shipped"] { color: #9370DB; }
+.status-select option[value="delivered"] { color: #32CD32; }
+.status-select option[value="cancelled"] { color: #FF0000; }
+.status-select option[value="refunded"] { color: #A9A9A9; }

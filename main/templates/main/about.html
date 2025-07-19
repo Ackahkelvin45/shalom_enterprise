@@ -34,94 +34,38 @@
             <div class="col-md-12">
                 
                 <!-- Hero Section -->
-                <div class="about-hero" style="text-align: center; margin-bottom: 50px;">
-                    <h1 style="color: #D10024; font-size: 48px; font-weight: bold; margin-bottom: 20px;">About SA Express</h1>
-                    <p style="font-size: 20px; color: #666; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                <div class="about-hero" style="text-align: center; margin-bottom: 50px; position: relative; overflow: hidden;">
+                    <div class="hero-bg-shapes">
+                        <div class="shape-1"></div>
+                        <div class="shape-2"></div>
+                        <div class="shape-3"></div>
+                    </div>
+                    <h1 class="hero-title" style="color: #D10024; font-size: 48px; font-weight: bold; margin-bottom: 20px; position: relative; z-index: 2;">
+                        About <span class="text-gradient">SA Express</span>
+                    </h1>
+                    <p class="hero-subtitle" style="font-size: 20px; color: #666; max-width: 800px; margin: 0 auto; line-height: 1.6; position: relative; z-index: 2;">
                         Ghana's premier destination for quality electronics and appliances, bringing the latest technology to your doorstep with unmatched service and support.
                     </p>
+                    <div class="hero-accent-line"></div>
                 </div>
 
                 <!-- Main Story Section -->
-                <div class="row" style="margin-bottom: 60px;">
-                    <div class="col-md-6">
-                        <div class="about-content">
-                            <h2 style="color: #333; font-size: 32px; margin-bottom: 20px;">Our Story</h2>
-                            <p style="font-size: 16px; line-height: 1.8; color: #666; margin-bottom: 20px;">
-                                SA Express stands as one of Ghana's top customer-focused electronics and appliance companies. For over 5 years, we have been dedicated to bringing the latest technology directly to your doorstep, whether for your home, office, or business needs.
-                            </p>
-                            <p style="font-size: 16px; line-height: 1.8; color: #666; margin-bottom: 20px;">
-                                We believe that every Ghanaian deserves access to the best quality brands at great prices. This vision drives everything we do, from carefully selecting our product range to ensuring exceptional customer service at every touchpoint.
-                            </p>
-                            <p style="font-size: 16px; line-height: 1.8; color: #666;">
-                                Our commitment extends beyond just selling products. We provide comprehensive after-sales support through our strategically located service centres across Ghana, ensuring that your investment in technology is protected and maintained.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="about-image" style="text-align: center;">
-                            <img src="{% static 'img/about-hero.jpg' %}" alt="SA Express Store" style="width: 100%; height: 400px; object-fit: cover; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                        </div>
-                    </div>
-                </div>
+            
 
-                <!-- Values Section -->
-                <div class="values-section" style="background: #f8f8f8; padding: 60px 0; margin: 60px -15px;">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12" style="text-align: center; margin-bottom: 50px;">
-                                <h2 style="color: #333; font-size: 32px; margin-bottom: 20px;">Our Core Values</h2>
-                                <p style="font-size: 18px; color: #666; max-width: 600px; margin: 0 auto;">
-                                    These principles guide every decision we make and every interaction we have with our customers.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="value-item" style="text-align: center; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-bottom: 30px;">
-                                    <div class="value-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <h3 style="color: #333; font-size: 24px; margin-bottom: 15px;">Quality First</h3>
-                                    <p style="color: #666; line-height: 1.6;">
-                                        We sell only the best quality brands, ensuring that every product meets our high standards and exceeds customer expectations.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="value-item" style="text-align: center; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-bottom: 30px;">
-                                    <div class="value-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
-                                        <i class="fa fa-heart"></i>
-                                    </div>
-                                    <h3 style="color: #333; font-size: 24px; margin-bottom: 15px;">Customer Focus</h3>
-                                    <p style="color: #666; line-height: 1.6;">
-                                        Our customers are at the heart of everything we do. We're committed to providing exceptional service and support at every step.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="value-item" style="text-align: center; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-bottom: 30px;">
-                                    <div class="value-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
-                                        <i class="fa fa-shield"></i>
-                                    </div>
-                                    <h3 style="color: #333; font-size: 24px; margin-bottom: 15px;">Reliability</h3>
-                                    <p style="color: #666; line-height: 1.6;">
-                                        From product quality to after-sales support, we deliver consistent, reliable service that you can count on.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              
 
                 <!-- What We Offer Section -->
-                <div class="row" style="margin: 60px 0;">
+                <div class="row offers-section" style="margin: 60px 0;">
                     <div class="col-md-12">
-                        <h2 style="color: #333; font-size: 32px; margin-bottom: 40px; text-align: center;">What We Offer</h2>
+                        <h2 class="section-title" style="color: #333; font-size: 32px; margin-bottom: 40px; text-align: center; position: relative;">
+                            What We Offer
+                            <span class="title-accent"></span>
+                        </h2>
                     </div>
                     <div class="col-md-6">
-                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
-                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
-                                <i class="fa fa-laptop"></i>
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px; padding: 20px; border-radius: 10px; background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); box-shadow: 0 3px 15px rgba(0,0,0,0.05);">
+                            <div class="offer-icon-wrapper" style="margin-right: 20px; width: 100px; height: 80px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #D10024, #ff1744); border-radius: 100%;">
+                                <i class="fa fa-laptop" style="font-size: 20px; color: white;"></i>
                             </div>
                             <div class="offer-content">
                                 <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Latest Technology</h4>
@@ -130,9 +74,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
-                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
-                                <i class="fa fa-tag"></i>
+                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px; padding: 20px; border-radius: 10px; background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); box-shadow: 0 3px 15px rgba(0,0,0,0.05);">
+                            <div class="offer-icon-wrapper" style="margin-right: 20px; width: 100px; height: 80px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #D10024, #ff1744); border-radius: 50%;">
+                                <i class="fa fa-tag" style="font-size: 20px; color: white;"></i>
                             </div>
                             <div class="offer-content">
                                 <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Great Prices</h4>
@@ -141,9 +85,13 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
-                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
-                                <i class="fa fa-truck"></i>
+                       
+                    </div>
+                    <div class="col-md-6">
+                   
+                      <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px; padding: 20px; border-radius: 10px; background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); box-shadow: 0 3px 15px rgba(0,0,0,0.05);">
+                            <div class="offer-icon-wrapper" style="margin-right: 20px; width: 100px; height: 80px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #D10024, #ff1744); border-radius: 50%;">
+                                <i class="fa fa-truck" style="font-size: 20px; color: white;"></i>
                             </div>
                             <div class="offer-content">
                                 <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Nationwide Delivery</h4>
@@ -153,46 +101,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
-                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
-                                <i class="fa fa-users"></i>
-                            </div>
-                            <div class="offer-content">
-                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Expert Support</h4>
-                                <p style="color: #666; line-height: 1.6; margin: 0;">
-                                    Knowledgeable customer service team ready to help with all your technology needs.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
-                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
-                                <i class="fa fa-wrench"></i>
-                            </div>
-                            <div class="offer-content">
-                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Service Centres</h4>
-                                <p style="color: #666; line-height: 1.6; margin: 0;">
-                                    Multiple service centres across Ghana for maintenance and repairs.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="offer-item" style="display: flex; align-items: center; margin-bottom: 30px;">
-                            <div class="offer-icon" style="font-size: 32px; color: #D10024; margin-right: 20px; width: 60px;">
-                                <i class="fa fa-certificate"></i>
-                            </div>
-                            <div class="offer-content">
-                                <h4 style="color: #333; font-size: 20px; margin-bottom: 10px;">Warranty Protection</h4>
-                                <p style="color: #666; line-height: 1.6; margin: 0;">
-                                    Comprehensive warranty coverage and protection for your investments.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Statistics Section -->
-                <div class="stats-section" style="background: #D10024; padding: 60px 0; margin: 60px -15px; color: white;">
-                    <div class="container">
+                <div class="stats-section" style="background: linear-gradient(135deg, #D10024 0%, #B71C1C 50%, #ff1744 100%); padding: 80px 0; margin: 60px -15px; color: white; position: relative; overflow: hidden;">
+                    <div class="stats-bg-pattern"></div>
+                    <div class="container" style="position: relative; z-index: 2;">
                         <div class="row">
                             <div class="col-md-12" style="text-align: center; margin-bottom: 50px;">
                                 <h2 style="color: white; font-size: 32px; margin-bottom: 20px;">Our Impact</h2>
@@ -203,26 +117,30 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
-                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">5+</div>
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px; padding: 20px; border-radius: 15px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                                    <div class="stat-number" data-target="5" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">0</div>
+                                    <div class="stat-plus" style="font-size: 24px; margin-top: -20px; margin-bottom: 10px;">+</div>
                                     <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Years of Experience</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
-                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">1000+</div>
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px; padding: 20px; border-radius: 15px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                                    <div class="stat-number" data-target="1000" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">0</div>
+                                    <div class="stat-plus" style="font-size: 24px; margin-top: -20px; margin-bottom: 10px;">+</div>
                                     <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Happy Customers</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
-                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">50+</div>
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px; padding: 20px; border-radius: 15px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                                    <div class="stat-number" data-target="50" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">0</div>
+                                    <div class="stat-plus" style="font-size: 24px; margin-top: -20px; margin-bottom: 10px;">+</div>
                                     <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Premium Brands</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="stat-item" style="text-align: center; margin-bottom: 30px;">
-                                    <div class="stat-number" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">10+</div>
+                                <div class="stat-item" style="text-align: center; margin-bottom: 30px; padding: 20px; border-radius: 15px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                                    <div class="stat-number" data-target="10" style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">0</div>
+                                    <div class="stat-plus" style="font-size: 24px; margin-top: -20px; margin-bottom: 10px;">+</div>
                                     <div class="stat-label" style="font-size: 18px; opacity: 0.9;">Service Centres</div>
                                 </div>
                             </div>
@@ -230,53 +148,8 @@
                     </div>
                 </div>
 
-                <!-- Mission & Vision Section -->
-                <div class="row" style="margin: 60px 0;">
-                    <div class="col-md-6">
-                        <div class="mission-box" style="background: #f8f8f8; padding: 40px; border-radius: 10px; height: 100%;">
-                            <div class="mission-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
-                                <i class="fa fa-bullseye"></i>
-                            </div>
-                            <h3 style="color: #333; font-size: 24px; margin-bottom: 20px;">Our Mission</h3>
-                            <p style="color: #666; line-height: 1.8; font-size: 16px;">
-                                To make the latest technology accessible to every Ghanaian by providing high-quality electronics and appliances at competitive prices, backed by exceptional customer service and reliable after-sales support.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="vision-box" style="background: #f8f8f8; padding: 40px; border-radius: 10px; height: 100%;">
-                            <div class="vision-icon" style="font-size: 48px; color: #D10024; margin-bottom: 20px;">
-                                <i class="fa fa-eye"></i>
-                            </div>
-                            <h3 style="color: #333; font-size: 24px; margin-bottom: 20px;">Our Vision</h3>
-                            <p style="color: #666; line-height: 1.8; font-size: 16px;">
-                                To be Ghana's most trusted and preferred destination for electronics and appliances, known for our commitment to quality, customer satisfaction, and technological innovation.
-                            </p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Contact CTA Section -->
-                <div class="cta-section" style="background: linear-gradient(135deg, #D10024, #ff1744); padding: 60px 0; margin: 60px -15px; text-align: center; color: white;">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h2 style="color: white; font-size: 32px; margin-bottom: 20px;">Ready to Experience the SA Express Difference?</h2>
-                                <p style="font-size: 18px; color: rgba(255,255,255,0.9); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                                    Discover our wide range of quality electronics and appliances, and let us bring the latest technology to your doorstep.
-                                </p>
-                                <div class="cta-buttons">
-                                    <a href="{% url 'products:all-products' %}" class="btn btn-white" style="background: white; color: #D10024; padding: 15px 30px; font-size: 16px; font-weight: bold; border-radius: 25px; text-decoration: none; margin-right: 20px; display: inline-block;">
-                                        Shop Now
-                                    </a>
-                                    <a href="#" class="btn btn-outline-white" style="border: 2px solid white; color: white; padding: 13px 30px; font-size: 16px; font-weight: bold; border-radius: 25px; text-decoration: none; display: inline-block;">
-                                        Contact Us
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        
 
             </div>
             <!-- /MAIN CONTENT -->
@@ -317,51 +190,180 @@
 
 {% block scripts %}
 <style>
-.btn-white {
-    background: white !important;
-    color: #D10024 !important;
-    border: none !important;
-    transition: all 0.3s ease;
+/* Gradient text effect */
+.text-gradient {
+    background: linear-gradient(135deg, #D10024, #ff1744);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.btn-white:hover {
-    background: #f8f8f8 !important;
-    color: #D10024 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+/* Hero section enhancements */
+.about-hero {
+    padding: 60px 0;
 }
 
-.btn-outline-white {
-    border: 2px solid white !important;
-    color: white !important;
-    background: transparent !important;
-    transition: all 0.3s ease;
+.hero-bg-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 1;
 }
 
-.btn-outline-white:hover {
-    background: white !important;
-    color: #D10024 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+.shape-1, .shape-2, .shape-3 {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(209, 0, 36, 0.05), rgba(255, 23, 68, 0.05));
 }
 
-.value-item:hover {
-    transform: translateY(-5px);
-    transition: transform 0.3s ease;
+.shape-1 {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: -5%;
 }
 
-.offer-item:hover .offer-icon {
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
+.shape-2 {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    right: -3%;
 }
 
-.mission-box:hover,
-.vision-box:hover {
-    transform: translateY(-5px);
-    transition: transform 0.3s ease;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+.shape-3 {
+    width: 100px;
+    height: 100px;
+    bottom: 10%;
+    left: 20%;
 }
 
+.hero-accent-line {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #D10024, #ff1744);
+    margin: 30px auto;
+    border-radius: 2px;
+}
+
+/* Section title styling */
+.section-title {
+    position: relative;
+    display: inline-block;
+}
+
+.title-accent {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, #D10024, #ff1744);
+    border-radius: 2px;
+}
+
+/* Image enhancements */
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(135deg, rgba(209, 0, 36, 0.1), rgba(255, 23, 68, 0.1));
+    border-radius: 15px;
+    z-index: -1;
+}
+
+.image-decoration {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 80px;
+    background: linear-gradient(135deg, #D10024, #ff1744);
+    border-radius: 50%;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+/* Values section enhancements */
+.values-bg-decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(209, 0, 36, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.value-bg-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(209, 0, 36, 0.02) 100%);
+}
+
+/* Statistics section enhancements */
+.stats-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+/* Mission & Vision section enhancements */
+.mission-bg-pattern, .vision-bg-pattern {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, rgba(209, 0, 36, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(209, 0, 36, 0.05) 25%, transparent 25%);
+    background-size: 20px 20px;
+    opacity: 0.5;
+}
+
+/* CTA section enhancements */
+.cta-bg-decoration {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    right: -50px;
+    bottom: -50px;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+
+/* Counter animation */
+@keyframes countUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.stat-number.counting {
+    animation: countUp 0.5s ease;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
     .about-hero h1 {
         font-size: 36px !important;
@@ -380,10 +382,100 @@
     
     .cta-buttons a {
         display: block !important;
-        margin: 10px 0 !important;
+        margin: 10px auto !important;
+        width: 200px;
+    }
+    
+    .offer-item {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    
+    .offer-icon-wrapper {
+        margin: 0 0 15px 0 !important;
+    }
+    
+    .shape-1, .shape-2, .shape-3 {
+        display: none;
+    }
+}
+
+/* Loading animation for stats */
+.stat-item {
+    animation: slideInUp 0.6s ease forwards;
+}
+
+.stat-item:nth-child(1) { animation-delay: 0.1s; }
+.stat-item:nth-child(2) { animation-delay: 0.2s; }
+.stat-item:nth-child(3) { animation-delay: 0.3s; }
+.stat-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate numbers function
+    function animateNumber(element, target, duration = 2000) {
+        const start = 0;
+        const increment = target / (duration / 16);
+        let current = start;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current);
+            element.classList.add('counting');
+        }, 16);
+    }
+
+    // Intersection Observer for counter animation
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counters = entry.target.querySelectorAll('.stat-number');
+                counters.forEach((counter, index) => {
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    setTimeout(() => {
+                        animateNumber(counter, target);
+                    }, index * 200);
+                });
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    // Observe stats section
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        statsObserver.observe(statsSection);
+    }
+
+    // Parallax effect for hero shapes
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const shapes = document.querySelectorAll('.hero-bg-shapes .shape-1, .hero-bg-shapes .shape-2, .hero-bg-shapes .shape-3');
+        
+        shapes.forEach((shape, index) => {
+            const speed = 0.5 + (index * 0.2);
+            const yPos = -(scrolled * speed);
+            shape.style.transform = `translateY(${yPos}px) rotate(${scrolled * 0.1}deg)`;
+        });
+    });
+});
+</script>
 {% endblock %}
 
 {% endblock %}

@@ -280,6 +280,8 @@ class HotDeal(models.Model):
     def is_currently_active(self):
         """Check if the deal is currently active based on dates"""
         now = timezone.now()
+        if not all([self.start_date, self.end_date]):
+            return False
         return (self.is_active and 
                 self.start_date <= now <= self.end_date)
 

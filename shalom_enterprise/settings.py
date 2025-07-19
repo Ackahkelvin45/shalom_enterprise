@@ -62,7 +62,6 @@ MIDDLEWARE = [
       'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # add this FIRST
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -142,10 +141,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
-STATIC_URL = "/static/"
-MEDIA_URL = "/media/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'staticfiles'),  # if you have additional static directories
+]
+
+# Media files (user uploaded content)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # settings.py
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -158,9 +162,9 @@ AUTH_USER_MODEL = "authentication.CustomUser"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.zoho.com'
-EMAIL_PORT = 465  # Port for SSL (not TLS)
-EMAIL_USE_SSL = True  # Must be True for port 465
-EMAIL_USE_TLS = False  # Must be False if SSL is True
+EMAIL_PORT = 587  # Port for SSL (not TLS)
+EMAIL_USE_SSL = False  # Must be True for port 465
+EMAIL_USE_TLS = True # Must be False if SSL is True
 EMAIL_HOST_USER = os.getenv("EMAIL")  # Your full Zoho email (e.g., user@domain.com)
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")  # Your Zoho password or App Password (if 2FA enabled)
 DEFAULT_FROM_EMAIL = "enterpriseshalom676@gmail.com"  # Must match EMAIL_HOST_USER
@@ -213,35 +217,28 @@ CSRF_TRUSTED_ORIGINS = [
 
 ]
 
-
 UNFOLD = {
     "SITE_TITLE": "Shalom Afric Enterprise",
     "SITE_HEADER": "Shalom Afric Enterprise",
     "DASHBOARD_CALLBACK": "shalom_enterprise.dashboard.dashboard_callback",
-
+    
     "SITE_ICON": {
-        "light": "/static/img/image.png",  # Path relative to static/
+        "light": "/static/img/image.png",
         "dark": "/static/img/image.png",
     },
     "DARK_MODE": True,
     "LOGIN": {
-        "image": "/static/img/hotdeal.png",  # Removed duplicate 'static/'
-            "title": "Welcome to Shalom Afric Enterprise Admin Portal",
+        "image": "/static/img/hotdeal.png",
+        "title": "Welcome to Shalom Afric Enterprise Admin Portal",
         "description": "Please enter your credentials",
-        
     },
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
     },
-
-       "DASHBOARD_CALLBACK": "shalom_enterprise.dashboard.dashboard_callback",
-    
-   
-     "TEMPLATES": {
-        "DASHBOARD": "admin/dashboard.html",  # Explicitly point to your template
+    "TEMPLATES": {
+        "DASHBOARD": "admin/dashboard.html",
     },
-
-    
 }
-
+ZOHO_CLIENT_ID = os.getenv('ZOHO_CLIENT_ID')
+ZOHO_CLIENT_SECRET = os.getenv('ZOHO_CLIENT_SECRET')

@@ -1,11 +1,407 @@
-
 {% extends 'shalom_enterprise/layout.html' %}
 {%load static%}
 {% block title %}Home -SA Express{% endblock %}
 
 {% block content %}
 
+	<!-- CATEGORY CAROUSEL SECTION -->
+	<div class="category-carousel-section">
+		<div class="category-carousel">
+			<div class="carousel-container">
+				{% for category in categories %}
+				<div class="carousel-slide {% if forloop.first %}active{% endif %}">
+					<div class="slide-image">
+						{% if category.icon %}
+							<img src="{{ category.icon.url }}" alt="{{ category.name }}" />
+						{% else %}
+							<img src="{% static 'img/default-category.jpg' %}" alt="{{ category.name }}" />
+						{% endif %}
+						<div class="slide-overlay"></div>
+					</div>
+					<div class="slide-content">
+						<h2 class="slide-title">{{ category.name }}</h2>
+						{% if category.description %}
+							<p class="slide-description">{{ category.description }}</p>
+						{% endif %}
+						<a href="{% url 'products:all-products' %}?category={{ category.id }}" class="slide-btn">
+							Explore Collection <i class="fa fa-arrow-right"></i>
+						</a>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+			
+			<!-- Navigation Arrows -->
+			<button class="carousel-nav prev-btn" onclick="previousSlide()">
+				<i class="fa fa-chevron-left"></i>
+			</button>
+			<button class="carousel-nav next-btn" onclick="nextSlide()">
+				<i class="fa fa-chevron-right"></i>
+			</button>
+			
+			<!-- Dots Indicator -->
+			<div class="carousel-dots">
+				{% for category in categories %}
+				<span class="dot {% if forloop.first %}active{% endif %}" onclick="currentSlide({{ forloop.counter }})"></span>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
 
+	<style>
+		.category-carousel-section {
+			position: relative;
+			width: 100%;
+			height: 500px;
+			overflow: hidden;
+			margin-bottom: 100px;
+		}
+
+		.category-carousel {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.carousel-container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.carousel-slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			transition: opacity 0.6s ease-in-out;
+		}
+
+		.carousel-slide.active {
+			opacity: 1;
+		}
+
+		.slide-image {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.slide-image img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center;
+		}
+
+		.slide-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(135deg, rgba(209, 0, 36, 0.5) 0%, rgba(0, 0, 0, 0.4) 100%);
+		}
+
+		.slide-content {
+			position: absolute;
+			top: 50%;
+			left: 70px;
+			transform: translateY(-50%);
+			color: white;
+			z-index: 10;
+			max-width: 500px;
+		}
+
+		.slide-title {
+			font-size: 3.5rem;
+			font-weight: bold;
+			margin-bottom: 20px;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+			line-height: 1.2;
+		}
+
+		.slide-description {
+			font-size: 1.2rem;
+			margin-bottom: 30px;
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+			line-height: 1.5;
+		}
+
+		.slide-btn {
+			display: inline-block;
+			background-color: #D10024;
+			color: white;
+			padding: 15px 30px;
+			text-decoration: none;
+			border-radius: 5px;
+			font-weight: bold;
+			font-size: 1.1rem;
+			transition: all 0.3s ease;
+			text-transform: uppercase;
+			box-shadow: 0 4px 15px rgba(209, 0, 36, 0.3);
+		}
+
+		.slide-btn:hover {
+			background-color: #b8001e;
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(209, 0, 36, 0.4);
+			color: white;
+			text-decoration: none;
+		}
+
+		.slide-btn i {
+			margin-left: 10px;
+			transition: transform 0.3s ease;
+		}
+
+		.slide-btn:hover i {
+			transform: translateX(5px);
+		}
+
+		/* Navigation Arrows */
+		.carousel-nav {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: rgba(255, 255, 255, 0.2);
+			border: 2px solid rgba(255, 255, 255, 0.5);
+			color: white;
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			font-size: 1.5rem;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			z-index: 20;
+			backdrop-filter: blur(10px);
+		}
+
+		.carousel-nav:hover {
+			background-color: #D10024;
+			border-color: #D10024;
+			transform: translateY(-50%) scale(1.1);
+		}
+
+		.prev-btn {
+			left: 20px;
+		}
+
+		.next-btn {
+			right: 20px;
+		}
+
+		/* Dots Indicator */
+		.carousel-dots {
+			position: absolute;
+			bottom: 30px;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			gap: 15px;
+			z-index: 20;
+		}
+
+		.dot {
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			background-color: rgba(255, 255, 255, 0.5);
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.dot.active,
+		.dot:hover {
+			background-color: #D10024;
+			transform: scale(1.2);
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.category-carousel-section {
+				height: 400px;
+				margin-bottom: 80px;
+			}
+
+			.slide-content {
+				left: 20px;
+				right: 20px;
+				max-width: calc(100% - 40px);
+			}
+
+			.slide-title {
+				font-size: 2.5rem;
+			}
+
+			.slide-description {
+				font-size: 1rem;
+			}
+
+			.carousel-nav {
+				width: 25px;
+				height: 25px;
+				font-size: 1.2rem;
+			}
+
+			.prev-btn {
+				left: 2px;
+			}
+
+			.next-btn {
+				right: 10px;
+			}
+
+			.dot {
+				width: 6px;
+				height: 6px;
+			}
+
+			.carousel-dots {
+				bottom: 20px;
+				gap: 10px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.category-carousel-section {
+				height: 350px;
+				margin-bottom: 60px;
+			}
+
+			.slide-content {
+				left: 15px;
+				right: 15px;
+				max-width: calc(100% - 30px);
+			}
+
+			.slide-title {
+				font-size: 2rem;
+			}
+
+			.slide-btn {
+				padding: 12px 24px;
+				font-size: 1rem;
+			}
+
+			.carousel-nav {
+				width: 20px;
+				height: 20px;
+				font-size: 1rem;
+			}
+
+			.prev-btn {
+				left: 5px;
+			}
+
+			.next-btn {
+				right: 5px;
+			}
+
+			.dot {
+				width: 5px;
+				height: 5px;
+			}
+
+			.carousel-dots {
+				bottom: 15px;
+				gap: 8px;
+			}
+		}
+	</style>
+
+	<script>
+		let currentSlideIndex = 0;
+		const slides = document.querySelectorAll('.carousel-slide');
+		const dots = document.querySelectorAll('.dot');
+		const totalSlides = slides.length;
+
+		function showSlide(index) {
+			// Remove active class from all slides and dots
+			slides.forEach(slide => slide.classList.remove('active'));
+			dots.forEach(dot => dot.classList.remove('active'));
+
+			// Add active class to current slide and dot
+			if (slides[index]) {
+				slides[index].classList.add('active');
+			}
+			if (dots[index]) {
+				dots[index].classList.add('active');
+			}
+		}
+
+		function nextSlide() {
+			currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+			showSlide(currentSlideIndex);
+		}
+
+		function previousSlide() {
+			currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+			showSlide(currentSlideIndex);
+		}
+
+		function currentSlide(index) {
+			currentSlideIndex = index - 1;
+			showSlide(currentSlideIndex);
+		}
+
+		// Auto-play functionality
+		function autoPlay() {
+			nextSlide();
+		}
+
+		// Start auto-play (changes slide every 5 seconds)
+		let autoPlayInterval = setInterval(autoPlay, 5000);
+
+		// Pause auto-play when user hovers over carousel
+		const carousel = document.querySelector('.category-carousel');
+		if (carousel) {
+			carousel.addEventListener('mouseenter', () => {
+				clearInterval(autoPlayInterval);
+			});
+
+			carousel.addEventListener('mouseleave', () => {
+				autoPlayInterval = setInterval(autoPlay, 5000);
+			});
+		}
+
+		// Touch/Swipe functionality for mobile
+		let startX = 0;
+		let endX = 0;
+
+		carousel.addEventListener('touchstart', (e) => {
+			startX = e.touches[0].clientX;
+		});
+
+		carousel.addEventListener('touchend', (e) => {
+			endX = e.changedTouches[0].clientX;
+			handleSwipe();
+		});
+
+		function handleSwipe() {
+			const swipeThreshold = 50;
+			const diff = startX - endX;
+
+			if (Math.abs(diff) > swipeThreshold) {
+				if (diff > 0) {
+					nextSlide();
+				} else {
+					previousSlide();
+				}
+			}
+		}
+
+		// Keyboard navigation
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowLeft') {
+				previousSlide();
+			} else if (e.key === 'ArrowRight') {
+				nextSlide();
+			}
+		});
+	</script>
 
 	<!-- SECTION -->
 	<div class="section">
@@ -172,53 +568,259 @@
 	<!-- /SECTION -->
 
 	<!-- HOT DEAL SECTION -->
-	<div id="hot-deal" class="section">
-		<!-- container -->
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-12">
-					<div class="hot-deal">
-						<ul class="hot-deal-countdown">
-							<li>
-								<div>
-									<h3>02</h3>
-									<span>Days</span>
-								</div>
-							</li>
-							<li>
-								<div>
-									<h3>10</h3>
-									<span>Hours</span>
-								</div>
-							</li>
-							<li>
-								<div>
-									<h3>34</h3>
-									<span>Mins</span>
-								</div>
-							</li>
-							<li>
-								<div>
-									<h3>60</h3>
-									<span>Secs</span>
-								</div>
-							</li>
-						</ul>
-						<h2 class="text-uppercase">hot deal this week</h2>
-						<p>New Collection Up to 50% OFF</p>
-						<a class="primary-btn cta-btn" href="#">Shop now</a>
+	<div id="hot-deal" style="background-image: {% static 'img/hotdeal.png' %};" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="hot-deal">
+							<ul class="hot-deal-countdown">
+								<li>
+									<div>
+										<h3>02</h3>
+										<span>Days</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<h3>10</h3>
+										<span>Hours</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<h3>34</h3>
+										<span>Mins</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<h3>60</h3>
+										<span>Secs</span>
+									</div>
+								</li>
+							</ul>
+							<h2 class="text-uppercase">hot deals this week</h2>
+							<p>New Collection Up to 30% OFF</p>
+							<a class="primary-btn cta-btn" href="{% url 'products:hot-deals' %}">Shop now</a>
+						</div>
 					</div>
 				</div>
+				<!-- /row -->
 			</div>
-			<!-- /row -->
+			<!-- /container -->
 		</div>
-		<!-- /container -->
-	</div>
 	<!-- /HOT DEAL SECTION -->
 
 	<!-- SECTION -->
-	<
+	
+
+		<!-- SECTION -->
+		<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- First Top Sellers Column -->
+            <div class="col-md-4 col-xs-6">
+                <div class="section-title">
+                    <h4 class="title">Top selling</h4>
+                    <div class="section-nav">
+                        <div id="slick-nav-3" class="products-slick-nav"></div>
+                    </div>
+                </div>
+
+                <div class="products-widget-slick" data-nav="#slick-nav-3">
+                    <div>
+                        {% for product in top_sellers|slice:":3" %}
+                        <!-- product widget -->
+                        <div class="product-widget">
+                            <div class="product-img">
+                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ product.category.name }}</p>
+                                <h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                                <h4 class="product-price">
+                                    GHS{{ product.price }}
+                                    {% if product.discount_price %}
+                                    <del class="product-old-price">GHS{{ product.discount_price }}</del>
+                                    {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <!-- /product widget -->
+                        {% endfor %}
+                    </div>
+
+                    <div>
+                        {% for product in top_sellers|slice:"3:6" %}
+                        <!-- product widget -->
+                        <div class="product-widget">
+                            <div class="product-img">
+                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ product.category.name }}</p>
+                                <h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                                <h4 class="product-price">
+                                    GHS{{ product.price }}
+                                    {% if product.discount_price %}
+                                    <del class="product-old-price">GHS{{ product.discount_price }}</del>
+                                    {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <!-- /product widget -->
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Top Sellers Column -->
+           <!-- Second Top Sellers Column -->
+<div class="col-md-4 col-xs-6">
+    <div class="section-title">
+        <h4 class="title">Top Rated</h4>
+        <div class="section-nav">
+            <div id="slick-nav-4" class="products-slick-nav"></div>
+        </div>
+    </div>
+
+    <div class="products-widget-slick" data-nav="#slick-nav-4">
+        <div>
+            {% for product in top_rated|slice:":3" %}
+            <!-- product widget -->
+            <div class="product-widget">
+                <div class="product-img">
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                </div>
+                <div class="product-body">
+                    <p class="product-category">{{ product.category.name }}</p>
+                    <h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                    <div class="product-rating">
+                        {% with rating=product.average_rating %}
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= rating %}
+                                    <i class="fa fa-star"></i>
+                                {% else %}
+                                    <i class="fa fa-star-o"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>({{ product.rating_count }} reviews)</span>
+                        {% endwith %}
+                    </div>
+                    <h4 class="product-price">
+                        GHS{{ product.price }}
+                        {% if product.discount_price %}
+                        <del class="product-old-price">GHS{{ product.discount_price }}</del>
+                        {% endif %}
+                    </h4>
+                </div>
+            </div>
+            <!-- /product widget -->
+            {% endfor %}
+        </div>
+
+        <div>
+            {% for product in top_rated|slice:"3:6" %}
+            <!-- product widget -->
+            <div class="product-widget">
+                <div class="product-img">
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                </div>
+                <div class="product-body">
+                    <p class="product-category">{{ product.category.name }}</p>
+                    <h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                    <div class="product-rating">
+                        {% with rating=product.average_rating %}
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= rating %}
+                                    <i class="fa fa-star"></i>
+                                {% else %}
+                                    <i class="fa fa-star-o"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>({{ product.rating_count }} reviews)</span>
+                        {% endwith %}
+                    </div>
+                    <h4 class="product-price">
+                        GHS{{ product.price }}
+                        {% if product.discount_price %}
+                        <del class="product-old-price">GHS{{ product.discount_price }}</del>
+                        {% endif %}
+                    </h4>
+                </div>
+            </div>
+            <!-- /product widget -->
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+            <div class="clearfix visible-sm visible-xs"></div>
+
+            <!-- Third Column - New Arrivals -->
+            <div class="col-md-4 col-xs-6">
+                <div class="section-title">
+                    <h4 class="title">New Arrivals</h4>
+                    <div class="section-nav">
+                        <div id="slick-nav-5" class="products-slick-nav"></div>
+                    </div>
+                </div>
+
+                <div class="products-widget-slick" data-nav="#slick-nav-5">
+                    <div>
+                        {% for product in products|slice:":3" %}
+                        <!-- product widget -->
+                        <div class="product-widget">
+                            <div class="product-img">
+                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ product.category.name }}</p>
+                                <h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                                <h4 class="product-price">
+                                    GHS{{ product.price }}
+                                    {% if product.discount_price %}
+                                    <del class="product-old-price">GHS{{ product.discount_price }}</del>
+                                    {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <!-- /product widget -->
+                        {% endfor %}
+                    </div>
+
+                    <div>
+                        {% for product in products|slice:"3:6" %}
+                        <!-- product widget -->
+                        <div class="product-widget">
+                            <div class="product-img">
+                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ product.category.name }}</p>
+                                <h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                                <h4 class="product-price">
+                                    GHS{{ product.price }}
+                                    {% if product.discount_price %}
+                                    <del class="product-old-price">GHS{{ product.discount_price }}</del>
+                                    {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <!-- /product widget -->
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
 	<!-- /SECTION -->
 
 	<!-- SECTION -->
@@ -262,4 +864,3 @@
 
 
 {% endblock%}
-	
