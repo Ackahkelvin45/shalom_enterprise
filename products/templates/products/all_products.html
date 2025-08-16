@@ -185,63 +185,72 @@
 
 						<!-- store products -->
 						<div class="row">
-							<!-- product -->
-						
 							{% for product in products %}
-<div class="col-md-4 col-xs-6">
-    <div class="product">
-        <div class="product-img" style="height: 300px!important;">
-            {% with product.images.first as main_image %}
-                {% if main_image %}
-                    <img src="{{ main_image.image.url }}" alt="{{ product.name }}">
-                {% else %}
-                    <img src="" alt="No image available">
-                {% endif %}
-            {% endwith %}
-            
-            <div class="product-label">
-                {% if product.discount_price %}
-                    {% widthratio product.discount_price product.price 100 as discount_percentage %}
-                    <span class="sale">-{{ 100|subtract:discount_percentage }}%</span>
-                {% endif %}
-                <span class="new">NEW</span>
-            </div>
-        </div>
-        <div class="product-body">
-            <p class="product-category">{{ product.category.name }}</p>
-            <h3 class="product-name"><a href="#">{{ product.name }}</a></h3>
-            <h4 class="product-price">
-                GHS {{ product.discount_price|default:product.price }}
-                {% if product.discount_price %}
-                    <del class="product-old-price">GHS{{ product.price }}</del>
-                {% endif %}
-            </h4>
-            <div class="product-rating">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-            </div>
-            <div class="product-btns">
-                <button class="add-to-wishlist" onclick="addToWishlist({{ product.id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                <button class="quick-view">
-					<a href="{% url 'products:product-detail' product.slug %}">
-
-                        <i class="fa fa-eye"></i>
-                    </a>
-                    <span class="tooltipp">quick view</span>
-                </button>
-            </div>
-        </div>
-        <div class="add-to-cart">
-            <button class="add-to-cart-btn"  onclick="addToCart({{ product.id}}, 1)"><i class="fa fa-shopping-cart"></i> add to cart</button>
-        </div>
-    </div>
-</div>
-
-{% endfor %}
-<div class="clearfix visible-lg visible-md"></div>
+							<div class="col-md-4 col-sm-6 col-xs-12">
+								<div class="product">
+									<div class="product-img" style="height: 300px!important; overflow: hidden;">
+										{% with product.images.first as main_image %}
+											{% if main_image %}
+												<img src="{{ main_image.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+											{% else %}
+												<div style="width: 100%; height: 100%; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 14px;">
+													No Image
+												</div>
+											{% endif %}
+										{% endwith %}
+										
+										<div class="product-label">
+											{% if product.discount_price %}
+												{% widthratio product.discount_price product.price 100 as discount_percentage %}
+												<span class="sale">-{{ 100|subtract:discount_percentage }}%</span>
+											{% endif %}
+											<span class="new">NEW</span>
+										</div>
+									</div>
+									<div class="product-body">
+										<p class="product-category">{{ product.category.name }}</p>
+										<h3 class="product-name"><a href="{% url 'products:product-detail' product.slug %}">{{ product.name }}</a></h3>
+										<h4 class="product-price">
+											GHS {{ product.discount_price|default:product.price }}
+											{% if product.discount_price %}
+												<del class="product-old-price">GHS {{ product.price }}</del>
+											{% endif %}
+										</h4>
+										<div class="product-rating">
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+										<div class="product-btns">
+											<button class="add-to-wishlist" onclick="addToWishlist('{{ product.id }}')">
+												<i class="fa fa-heart-o"></i>
+												<span class="tooltipp">add to wishlist</span>
+											</button>
+											<button class="quick-view">
+												<a href="{% url 'products:product-detail' product.slug %}">
+													<i class="fa fa-eye"></i>
+												</a>
+												<span class="tooltipp">quick view</span>
+											</button>
+										</div>
+									</div>
+									<div class="add-to-cart">
+										<button class="add-to-cart-btn" onclick="addToCart('{{ product.id }}', 1)">
+											<i class="fa fa-shopping-cart"></i> add to cart
+										</button>
+									</div>
+								</div>
+							</div>
+							{% if forloop.counter|divisibleby:3 %}
+								<div class="clearfix visible-md visible-lg"></div>
+							{% endif %}
+							{% if forloop.counter|divisibleby:2 %}
+								<div class="clearfix visible-sm"></div>
+							{% endif %}
+							{% endfor %}
+						</div>
 		
 							
 							<!-- /product -->
