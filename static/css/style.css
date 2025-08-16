@@ -1230,6 +1230,7 @@ textarea.input {
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+  transition: all 0.3s ease;
 }
 
 .row > [class*="col-"] {
@@ -1242,6 +1243,7 @@ textarea.input {
 .row .product {
   height: 100%;
   margin: 0;
+  transition: all 0.3s ease;
 }
 
 /* Responsive grid adjustments */
@@ -1284,6 +1286,199 @@ textarea.input {
 
 .product .product-body .product-btns {
   margin-top: auto;
+}
+
+/*=========================================================
+	PRODUCT LIST VIEW
+===========================================================*/
+
+/* List View Layout */
+.list-view {
+  display: block;
+}
+
+.list-view .product {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  margin-bottom: 20px;
+  border: 1px solid #E4E7ED;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.list-view .product:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* List View Product Image */
+.product-img-list {
+  width: 200px;
+  height: 200px !important;
+  flex-shrink: 0;
+}
+
+.product-img-list img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* List View Product Body */
+.product-body-list {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  min-height: auto;
+}
+
+.product-body-list .product-category {
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #8D99AE;
+}
+
+.product-body-list .product-name {
+  font-size: 18px;
+  margin-bottom: 15px;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+}
+
+.product-body-list .product-name a {
+  color: #2B2D42;
+  font-weight: 600;
+}
+
+.product-body-list .product-name a:hover {
+  color: #D10024;
+}
+
+.product-body-list .product-price {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #D10024;
+  font-weight: 600;
+}
+
+.product-body-list .product-rating {
+  margin-bottom: 15px;
+}
+
+.product-body-list .product-description {
+  margin-bottom: 20px;
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+.product-body-list .product-description p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* List View Product Buttons */
+.product-body-list .product-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.product-body-list .product-btns button {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1px solid #E4E7ED;
+  background: #fff;
+  color: #8D99AE;
+  transition: all 0.3s ease;
+}
+
+.product-body-list .product-btns button:hover {
+  background: #D10024;
+  color: #fff;
+  border-color: #D10024;
+}
+
+/* List View Add to Cart */
+.add-to-cart-list {
+  position: static;
+  padding: 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #E4E7ED;
+  transform: none;
+  margin-top: auto;
+}
+
+.add-to-cart-list .add-to-cart-btn {
+  width: 100%;
+  height: 45px;
+  background: #D10024;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.add-to-cart-list .add-to-cart-btn:hover {
+  background: #b3001f;
+  transform: none;
+  padding: 0 30px;
+}
+
+.add-to-cart-list .add-to-cart-btn i {
+  margin-right: 8px;
+}
+
+/* Responsive List View */
+@media (max-width: 768px) {
+  .list-view .product {
+    flex-direction: column;
+  }
+  
+  .product-img-list {
+    width: 100%;
+    height: 250px !important;
+  }
+  
+  .product-body-list {
+    padding: 15px;
+  }
+  
+  .add-to-cart-list {
+    padding: 15px;
+  }
+}
+
+/* Loading animation for view transitions */
+.row.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Enhanced hover effects for both views */
+.product:hover {
+  transform: translateY(-2px);
+}
+
+.list-view .product:hover {
+  transform: none;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Better spacing for list view on larger screens */
+@media (min-width: 1200px) {
+  .product-body-list {
+    padding: 25px;
+  }
+  
+  .add-to-cart-list {
+    padding: 25px;
+  }
 }
 
 /*----------------------------*\
@@ -1415,6 +1610,17 @@ textarea.input {
 
 .store-grid li a {
   display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.store-grid li a:hover {
+  color: #D10024;
+}
+
+.store-grid li.active a {
+  color: #fff;
 }
 
 /*-- Store Pagination --*/

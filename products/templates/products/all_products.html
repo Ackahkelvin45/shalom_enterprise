@@ -177,18 +177,26 @@
 								</label>
 							</div>
 							<ul class="store-grid">
-								<li class="active"><i class="fa fa-th"></i></li>
-								<li><a href="#"><i class="fa fa-th-list"></i></a></li>
+								<li class="{% if not request.GET.view or request.GET.view == 'grid' %}active{% endif %}">
+									<a href="?{% for key,value in request.GET.items %}{% if key != 'view' and key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}view=grid" class="view-toggle" data-view="grid">
+										<i class="fa fa-th"></i>
+									</a>
+								</li>
+								<li class="{% if request.GET.view == 'list' %}active{% endif %}">
+									<a href="?{% for key,value in request.GET.items %}{% if key != 'view' and key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}view=list" class="view-toggle" data-view="list">
+										<i class="fa fa-th-list"></i>
+									</a>
+								</li>
 							</ul>
 						</div>
 						<!-- /store top filter -->
 
 						<!-- store products -->
-						<div class="row">
+						<div class="row {% if request.GET.view == 'list' %}list-view{% endif %}">
 							{% for product in products %}
-							<div class="col-md-4 col-sm-6 col-xs-12">
-								<div class="product">
-									<div class="product-img" style="height: 300px!important; overflow: hidden;">
+							<div class="{% if request.GET.view == 'list' %}col-md-12{% else %}col-md-4 col-sm-6 col-xs-12{% endif %}">
+								<div class="product {% if request.GET.view == 'list' %}product-list{% endif %}">
+									<div class="product-img {% if request.GET.view == 'list' %}product-img-list{% endif %}" style="{% if request.GET.view != 'list' %}height: 300px!important;{% endif %} overflow: hidden;">
 										{% with product.images.first as main_image %}
 											{% if main_image %}
 												<img src="{{ main_image.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -207,7 +215,7 @@
 											<span class="new">NEW</span>
 										</div>
 									</div>
-									<div class="product-body">
+									<div class="product-body {% if request.GET.view == 'list' %}product-body-list{% endif %}">
 										<p class="product-category">{{ product.category.name }}</p>
 										<h3 class="product-name"><a href="{% url 'products:product-detail' product.slug %}">{{ product.name }}</a></h3>
 										<h4 class="product-price">
@@ -223,6 +231,11 @@
 											<i class="fa fa-star"></i>
 											<i class="fa fa-star"></i>
 										</div>
+										{% if request.GET.view == 'list' %}
+											<div class="product-description">
+												<p>{{ product.description|truncatewords:30 }}</p>
+											</div>
+										{% endif %}
 										<div class="product-btns">
 											<button class="add-to-wishlist" onclick="addToWishlist('{{ product.id }}')">
 												<i class="fa fa-heart-o"></i>
@@ -236,18 +249,20 @@
 											</button>
 										</div>
 									</div>
-									<div class="add-to-cart">
+									<div class="add-to-cart {% if request.GET.view == 'list' %}add-to-cart-list{% endif %}">
 										<button class="add-to-cart-btn" onclick="addToCart('{{ product.id }}', 1)">
 											<i class="fa fa-shopping-cart"></i> add to cart
 										</button>
 									</div>
 								</div>
 							</div>
-							{% if forloop.counter|divisibleby:3 %}
-								<div class="clearfix visible-md visible-lg"></div>
-							{% endif %}
-							{% if forloop.counter|divisibleby:2 %}
-								<div class="clearfix visible-sm"></div>
+							{% if request.GET.view != 'list' %}
+								{% if forloop.counter|divisibleby:3 %}
+									<div class="clearfix visible-md visible-lg"></div>
+								{% endif %}
+								{% if forloop.counter|divisibleby:2 %}
+									<div class="clearfix visible-sm"></div>
+								{% endif %}
 							{% endif %}
 							{% endfor %}
 						</div>
@@ -356,7 +371,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
- 
+    // View toggle functionality
+    const viewToggles = document.querySelectorAll('.view-toggle');
+    viewToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const view = this.getAttribute('data-view');
+            const currentUrl = new URL(window.location);
+            
+            // Update or add view parameter
+            currentUrl.searchParams.set('view', view);
+            
+            // Remove page parameter when changing view
+            currentUrl.searchParams.delete('page');
+            
+            // Navigate to new URL
+            window.location.href = currentUrl.toString();
+        });
+    });
+    
+    // Smooth transitions for view changes
+    const productsContainer = document.querySelector('.row');
+    if (productsContainer) {
+        productsContainer.style.transition = 'all 0.3s ease';
+    }
 });
 </script>
 {% endblock %}
