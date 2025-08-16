@@ -68,7 +68,7 @@ def products(request):
     price_min = request.GET.get('price_min')
     price_max = request.GET.get('price_max')
     search_query = request.GET.get('search', '').strip()
-    page_size = request.GET.get('page_size', 4)  # Default to 4 items per page
+    page_size = request.GET.get('page_size', 20)  # Default to 4 items per page
     
     # Apply filters
     if category_ids:

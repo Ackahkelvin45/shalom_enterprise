@@ -449,59 +449,65 @@
         }
         
         // Load categories
-        async function loadCategories() {
-            try {
-                const response = await fetch('/products/api/categories/');
-                const data = await response.json();
-                
-                // Load into search dropdown
-                const select = document.getElementById('category-select');
-                if (select) {
-                    while (select.options.length > 1) {
-                        select.remove(1);
-                    }
-                    
-                    function addToDropdown(categories, level = 0) {
-                        categories.forEach(category => {
-                            const option = document.createElement('option');
-                            option.value = category.id;
-                            option.textContent = '➤ '.repeat(level) + category.name;
-                            option.className = `category-level-${level}`;
-                            select.appendChild(option);
-                            
-                            if (category.children && category.children.length > 0) {
-                                addToDropdown(category.children, level + 1);
-                            }
-                        });
-                    }
-                    
-                    addToDropdown(data.categories);
-                }
-                
-                // Load into footer
-                const footerList = document.getElementById('footer-categories');
-                if (footerList) {
-                    footerList.innerHTML = '';
-                    
-                    function addToFooter(categories) {
-                        categories.forEach(category => {
-                            const li = document.createElement('li');
-                            const a = document.createElement('a');
-                            a.href = `/products/all/?category=${category.id}`;
-                            a.textContent = category.name;
-                            li.appendChild(a);
-                            footerList.appendChild(li);
-                        });
-                    }
-                    
-                    addToFooter(data.categories.filter(cat => !cat.parent_id));
-                }
-                
-            } catch (error) {
-                console.error('Error loading categories:', error);
+     async function loadCategories() {
+    try {
+        const response = await fetch('/products/api/categories/');
+        const data = await response.json();
+        
+        // Load into search dropdown
+        const select = document.getElementById('category-select');
+        if (select) {
+            while (select.options.length > 1) {
+                select.remove(1);
             }
+            
+            function addToDropdown(categories, level = 0) {
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    
+                    // Truncate name if longer than 25 characters
+                    let displayName = category.name;
+                    if (displayName.length > 25) {
+                        displayName = displayName.substring(0, 22) + '...';
+                    }
+                    
+                    option.textContent = '➤ '.repeat(level) + displayName;
+                    option.className = `category-level-${level}`;
+                    select.appendChild(option);
+                    
+                    if (category.children && category.children.length > 0) {
+                        addToDropdown(category.children, level + 1);
+                    }
+                });
+            }
+            
+            addToDropdown(data.categories);
         }
         
+        // Load into footer (unchanged)
+        const footerList = document.getElementById('footer-categories');
+        if (footerList) {
+            footerList.innerHTML = '';
+            
+            function addToFooter(categories) {
+                categories.forEach(category => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `/products/all/?category=${category.id}`;
+                    a.textContent = category.name;
+                    li.appendChild(a);
+                    footerList.appendChild(li);
+                });
+            }
+            
+            addToFooter(data.categories.filter(cat => !cat.parent_id));
+        }
+        
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
         loadCategories();
     });
     </script>
