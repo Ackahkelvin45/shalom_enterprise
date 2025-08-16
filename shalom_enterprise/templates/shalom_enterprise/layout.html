@@ -466,8 +466,8 @@
                             const option = document.createElement('option');
                             option.value = category.id;
                            let displayName = category.name;
-                    if (displayName.length > 15) {
-                        displayName = displayName.substring(0, 15) + '...';
+                    if (displayName.length > 11) {
+                        displayName = displayName.substring(0, 12) + '...';
                     }
                             option.textContent = '➤ '.repeat(level) + displayName
                             option.className = `category-level-${level}`;
